@@ -1,18 +1,22 @@
 ## INFORMASI PROYEK
 
 **Judul Proyek:**  
-[Prediksi Level Risiko Stres Panas Satu Hari ke Depan bagi Pekerja Lapangan dengan Mempertimbangkan Kondisi El Niño]
+Prediksi Level Risiko Stres Panas Satu Hari ke Depan bagi Pekerja Lapangan dengan Mempertimbangkan Kondisi El Niño
 
-**Nama Mahasiswa:** [Nama Lengkap]  
-**NIM:** [Nomor Induk Mahasiswa]  
-**Program Studi:** [Teknologi Informasi / Rekayasa Perangkat Lunak]  
-**Mata Kuliah:** [Nama Mata Kuliah]  
-**Dosen Pengampu:** [Nama Dosen]  
-**Tahun Akademik:** [Tahun/Semester]  
-**Link GitHub Repository:** [URL Repository]  
+**Nama Mahasiswa:** 
+1. Alivia Rizka Wardani
+2. Novandy Triarto Wahyono
+**NIM:**
+1. 244311035
+2. 244311053 
+**Program Studi:** Teknologi Rekayasa Perangkat Lunak  
+**Mata Kuliah:** Data Science 
+**Dosen Pengampu:** Gus Nanang Syaifuddiin, S.Kom., M.Kom.  
+**Tahun Akademik:** 2026/ Semester 5  
+**Link GitHub Repository:** https://github.com/aliviarizz/Termal-Guard  
 **Link Video Pembahasan:** [URL Video (YouTube/Drive)]  
-**SDG yang Dipilih:** [Nomor & nama Goal, misal: SDG 3 – Kehidupan Sehat dan Sejahtera]  
-**Target SDG yang Relevan:** [misal: Target 3.4 – mengurangi kematian dini akibat penyakit tidak menular]
+**SDG yang Dipilih:** SDG 13 - Penanganan Perubahan Iklim dengan pendukung SDG 8 - keselamatan dan kesehatan kerja  
+**Target SDG yang Relevan:** Target 13.1: memperkuat ketahanan dan kapasitas adaptasi terhadap bahaya terkait iklim dan bencana alam
 
 ---
 
