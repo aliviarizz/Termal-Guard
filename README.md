@@ -12,13 +12,13 @@ Prediksi Level Risiko Stres Panas Satu Hari ke Depan bagi Pekerja Lapangan denga
 2. 244311053 
 
 **Program Studi:** Teknologi Rekayasa Perangkat Lunak  
-**Mata Kuliah:** Data Science 
-**Dosen Pengampu:** Gus Nanang Syaifuddiin, S.Kom., M.Kom.  
-**Tahun Akademik:** 2026/ Semester 5  
+**Mata Kuliah:** Data Science  
+**Dosen Pengampu:** Gus Nanang Syaifuddiin, S.Kom., M.Kom.    
+**Tahun Akademik:** 2026 / Semester 5  
 **Link GitHub Repository:** https://github.com/aliviarizz/Termal-Guard  
 **Link Video Pembahasan:** [URL Video (YouTube/Drive)]  
-**SDG yang Dipilih:** SDG 13 - Penanganan Perubahan Iklim dengan pendukung SDG 8 - keselamatan dan kesehatan kerja  
-**Target SDG yang Relevan:** Target 13.1: memperkuat ketahanan dan kapasitas adaptasi terhadap bahaya terkait iklim dan bencana alam
+**SDG yang Dipilih:** SDG 13 - Penanganan Perubahan Iklim  
+**Target SDG yang Relevan:** Target 13.1: memperkuat ketahanan dan kapasitas adaptasi terhadap bahaya terkait iklim dan bencana alam. Pendukung SDG 8 - keselamatan dan kesehatan kerja 
 
 ---
 
@@ -63,17 +63,21 @@ Pada proyek ini, mahasiswa diharapkan dapat:
 ## 2. PROJECT OVERVIEW  **[L]**
 
 ### 2.1 Latar Belakang
-**Isi bagian ini dengan:**
-- Mengapa proyek ini penting?
-- Permasalahan umum pada domain terkait (misal: kesehatan, pendidikan, keuangan, pertanian, NLP, computer vision, dll.)
-- Manfaat proyek untuk pengguna, bisnis, atau penelitian
-- Studi literatur atau referensi ilmiah (minimal 1–2 sumber wajib)
-- Keterkaitan masalah dengan SDGs yang dipilih (dijabarkan di Bab 2.2)
+Pekerja lapangan seperti buruh konstruksi, petani, dan petugas kebersihan bekerja langsung di bawah terik matahari, sehingga berisiko mengalami kelelahan panas (heat exhaustion) dan heat stroke. BMKG menyatakan El Niño 2026 sudah masuk kategori kuat, dan suhu maksimum pada akhir Oktober 2026 tercatat mencapai 38°C atau lebih di Jawa Timur.
 
-**Contoh referensi (berformat APA/IEEE):**
-> Goodfellow, I., Bengio, Y., & Courville, A. (2016). *Deep Learning*. MIT Press.
+Prakiraan cuaca yang tersedia umumnya hanya menampilkan angka suhu, belum menunjukkan tingkat risiko yang bisa dipakai untuk mengatur jam dan beban kerja. Padahal bahaya panas bergantung pada kombinasi suhu dan kelembapan (misalnya melalui heat index), bukan suhu saja. Karena itu, proyek ini memprediksi level risiko stres panas satu hari ke depan sebagai peringatan dini, dan menambahkan indeks El Niño sebagai fitur untuk melihat apakah kondisi iklim global membantu prediksi.
 
-**[Jelaskan konteks dan latar belakang proyek]**
+Manfaat proyek: penyedia kerja dan pekerja dapat menyesuaikan jam kerja, waktu istirahat, dan beban kerja sebelum hari yang berbahaya tiba.
+
+**Referensi (berformat APA/IEEE):**
+> Amin, M. D. I., Hidayat, J. J., Setyowati, C., Fitri, E. K., Anggraini, A. N., & Werdana, A. P. (2025, November). Implementasi Model LSTM Untuk Peramalan Curah Hujan Di Bekasi Dengan Pemanfaatan Data Cuaca BMKG. Jurnal Teknologi Informasi Digital (JTID), 1(2), 90–99. https://jurnal.ipdig.id/index.php/jtid/article/view/200
+> 
+> Copernicus Climate Change Service (C3S). (2024). ERA5-Land daily aggregated data from 1950 to present. ECMWF. https://cds.climate.copernicus.eu/datasets/reanalysis-era5-land
+> 
+> Fadhila, A. N., Santiasih, I., & Disrinama, A. M. (2021). Kenyamanan Termal dan Faktor Individu yang Mempengaruhi Kejadian Heat Strain pada Pekerja. Jurnal Envirotek, 13(1), 60–66. https://envirotek.upnjatim.ac.id/index.php/envirotek/article/view/99
+> 
+> World Meteorological Organization (WMO). (2024). State of the Global Climate 2023. https://wmo.int/publication-series/state-of-global-climate/state-of-global-climate-2023
+
 
 ### 2.2 Keterkaitan dengan SDGs (WAJIB)
 
@@ -81,34 +85,32 @@ Ide proyek **berasal dari mahasiswa** dan harus selaras dengan **salah satu** da
 
 | Komponen | Pertanyaan Panduan | Jawaban Anda |
 |----------|--------------------|--------------|
-| **SDG yang dipilih** | Goal nomor berapa dan apa namanya? | [ ... ] |
-| **Target SDG** | Target (misal 3.4, 13.1) mana yang paling relevan? | [ ... ] |
-| **Masalah nyata** | Masalah konkret apa yang diangkat? Siapa yang terdampak? | [ ... ] |
-| **Peran ML** | Mengapa ML/DL cocok? Apa keputusan atau proses yang dibantu? | [ ... ] |
-| **Indikator kontribusi** | Bagaimana hasil model berkontribusi pada target SDG (langsung/tidak langsung)? | [ ... ] |
-| **Pertimbangan etika** | Risiko bias, privasi, atau dampak salah prediksi? | [ ... ] |
+| **SDG yang dipilih** | Goal nomor berapa dan apa namanya? | 	SDG 13 – Penanganan Perubahan Iklim |
+| **Target SDG** | Target (misal 3.4, 13.1) mana yang paling relevan? | 	Target 13.1: memperkuat ketahanan dan kapasitas adaptasi terhadap bahaya terkait iklim dan bencana alam. Pendukung: SDG 8 target 8.8 (keselamatan dan kesehatan kerja). |
+| **Masalah nyata** | Masalah konkret apa yang diangkat? Siapa yang terdampak? | Gelombang panas akibat fenomena El Niño meningkatkan risiko kecelakaan kerja dan *heat stroke* pada pekerja outdoor (konstruksi, pertanian, kebersihan). |
+| **Peran ML** | Mengapa ML/DL cocok? Apa keputusan atau proses yang dibantu? | ML dipakai untuk memprediksi level risiko hari berikutnya dari pola cuaca beberapa hari terakhir dan indeks El Niño. Mampu memetakan pola temporal dan non-linear antar variabel atmosferik ((T_{max}), kelembapan, angin, indeks ONI) untuk memberikan rekomendasi level risiko stres panas (t+1). |
+| **Indikator kontribusi** | Bagaimana hasil model berkontribusi pada target SDG (langsung/tidak langsung)? | Menyediakan *early warning system* berbasis data presisi bagi manajer K3/lapangan dalam merencanakan jam istirahat dan perlindungan pekerja harian. |
+| **Pertimbangan etika** | Risiko bias, privasi, atau dampak salah prediksi? | Prediksi yang terlalu rendah (false negative) dapat membuat pekerja dipaksa bekerja pada kondisi berbahaya, sehingga recall kelas High/Extreme diutamakan |
 
-**Sumber ide:** [Jelaskan dari mana ide muncul: pengalaman pribadi, lingkungan sekitar, isu lokal/nasional, dll.]
+**Sumber ide:** Pemberitaan El Niño kuat 2026 dan suhu ekstrem di sejumlah wilayah Indonesia, serta belum adanya prakiraan yang menerjemahkan suhu menjadi level risiko kerja.
+
 
 ### 2.3 Ringkasan Alur Lifecycle Proyek
-Jelaskan dalam 1 paragraf pendek bagaimana proyek Anda melewati tahap L → M → O → P (dan iterasi apa yang direncanakan).
-
-**[Tulis ringkasan alur lifecycle proyek Anda]**
+[L] Data cuaca harian ERA5-Land dari tujuh kota dan indeks El Niño dikumpulkan, lalu level risiko hari berikutnya dibentuk dari heat index.    
+[M] Tiga model dirancang: Logistic Regression/Decision Tree sebagai baseline, XGBoost sebagai model advanced, dan LSTM sebagai model deep learning.     
+[O] Model dilatih dan dioptimasi dengan validation set berbasis waktu, termasuk tuning hyperparameter dan penanganan kelas tidak seimbang.     
+[P] Ketiganya dievaluasi pada test set dengan macro F1 dan recall kelas High/Extreme, lalu satu iterasi perbaikan dilakukan berdasarkan temuan evaluasi.    
 
 ---
 
 ## 3. BUSINESS UNDERSTANDING / PROBLEM UNDERSTANDING  **[L]**
 
 ### 3.1 Problem Statements
-Tuliskan 2–4 pernyataan masalah yang jelas dan spesifik.
 
-**Contoh (universal):**
-1. Model perlu mampu memprediksi nilai target dengan akurasi tinggi
-2. Sistem harus dapat mengidentifikasi pola pada citra secara otomatis
-3. Dataset memiliki noise sehingga perlu preprocessing yang tepat
-4. Dibutuhkan model deep learning yang mampu belajar representasi fitur kompleks
-
-**[Tulis problem statements Anda di sini]**
+1. Prakiraan cuaca konvensional belum mentranslasikan parameter iklim menjadi level risiko stres panas harian (t+1), sehingga sulit dijadikan acuan operasional untuk mengatur jam dan beban kerja pekerja lapangan.
+2. Belum tereksplorasinya sejauh mana integrasi fitur iklim harian ERA5 dengan Indeks El Niño (ONI) mampu meningkatkan akurasi peramalan risiko stres panas harian dibanding hanya menggunakan variabel cuaca lokal.
+3. Frekuensi kemunculan hari berisiko tinggi yang jauh lebih sedikit dibanding hari biasa menciptakan ketidakseimbangan data (imbalanced data) yang berpotensi memicu bias prediksi model.
+4. Tingginya bahaya keselamatan kerja akibat kesalahan prediksi risiko yang terlalu rendah (false negative) menuntut perancangan model (Baseline, Advanced ML, dan LSTM) yang dioptimasi khusus untuk memaksimalkan sensitivitas (Recall) pada kelas risiko bahaya.   
 
 ### 3.2 Formulasi Learning Problem (WAJIB)
 
@@ -116,76 +118,40 @@ Rumuskan masalah dalam kerangka *Learning Problem*:
 
 | Komponen | Pertanyaan Panduan | Jawaban Anda |
 |----------|--------------------|--------------|
-| **Target** | Apa yang diprediksi? Jenis tugas (klasifikasi biner/multikelas, regresi, forecasting, clustering, dll.)? | [ ... ] |
-| **Objective** | Apa yang dioptimalkan/diminimalkan secara matematis (misal: cross-entropy, MSE)? Metrik keberhasilan utama? | [ ... ] |
-| **Data** | Sumber, ukuran, jenis, dan asumsi tentang data (i.i.d.? distribusi train vs test?) | [ ... ] |
+| **Target** | Apa yang diprediksi? Jenis tugas (klasifikasi biner/multikelas, regresi, forecasting, clustering, dll.)? | Level risiko stres panas pada hari berikutnya (t+1) dengan 4 kelas: Low, Moderate, High, Extreme, berdasarkan formulasi Heat Index NOAA. Jenis tugas: Time Series Multiclass Classification |
+| **Objective** | Apa yang dioptimalkan/diminimalkan secara matematis (misal: cross-entropy, MSE)? Metrik keberhasilan utama? | Meminimalkan *Categorical Cross-Entropy Loss*. Metrik evaluasi utama: **Recall & Macro F1-Score** (fokus *High Recall* pada kelas *High/Extreme*). |
+| **Data** | Sumber, ukuran, jenis, dan asumsi tentang data (i.i.d.? distribusi train vs test?) | Data iklim harian reanalisis ERA5-Land (via Open-Meteo API) dari 7 kota (Madiun, Surabaya, Jakarta, Medan, Balikpapan, Makassar, Jayapura) periode 2021–2026, ditambah indeks El Niño dari NOAA CPC. Perkiraan ≥ 12.000 baris. Data deret waktu tidak i.i.d., sehingga pembagian data dilakukan berdasarkan waktu. Pembagian data dilakukan secara Chronological / Time-Based Split dengan rasio 80% data latih (periode 2021–2025) dan 20% data uji (periode 2026) |
 
 ### 3.3 Goals
 
-Tujuan harus spesifik, terukur, dan selaras dengan problem statement.
-**Contoh tujuan:**
-1. Membangun model ML untuk memprediksi variabel target dengan akurasi > 80%
-2. Mengukur performa tiga pendekatan model (baseline, advanced, deep learning)
-3. Menentukan model terbaik berdasarkan metrik evaluasi yang relevan
-4. Menghasilkan sistem yang dapat bekerja secara reproducible
-
-> Sertakan minimal satu goal yang menunjukkan kontribusi terhadap target SDG yang dipilih (Bab 2.2).
-
-**[Tulis goals Anda di sini]**
+1. Membangun model klasifikasi yang memprediksi level risiko stres panas satu hari ke depan untuk 7 kota.
+2. Membandingkan tiga pendekatan (baseline, advanced, deep learning) dengan metrik macro F1 dan recall kelas High/Extreme, serta pembanding naif (level besok = level hari ini).
+3. Mencapai recall kelas High/Extreme minimal 0,80 pada test set (target awal, dapat disesuaikan setelah melihat data).
+4. Menguji apakah penambahan indeks El Niño meningkatkan performa, dan melaporkan hasilnya terpisah untuk periode El Niño.
+5. Kontribusi SDG: menghasilkan model peringatan dini risiko panas yang mendukung adaptasi terhadap bahaya iklim (target 13.1) dan keselamatan pekerja (target 8.8).
 
 ### 3.4 Solution Approach  **[M]**
 
 Mahasiswa **WAJIB** menggunakan minimal **tiga model** dengan komposisi sebagai berikut:
 #### **Model 1 – Baseline Model**
 Model sederhana sebagai pembanding dasar.
-**Pilihan model:**
-- Linear Regression (untuk regresi)
-- Logistic Regression (untuk klasifikasi)
-- K-Nearest Neighbors (KNN)
-- Decision Tree
-- Naive Bayes
-
-**[Jelaskan model baseline yang Anda pilih dan alasannya]**
+- **Pilihan Model:** Decision Tree Classifier / Logistic Regression
+- **Alasan Pemilihan:** Model sederhana berbasis aturan logis/linear sebagai *benchmark* awal untuk mengukur kompleksitas batas keputusan data.
 
 #### **Model 2 – Advanced / ML Model**
 Model machine learning yang lebih kompleks.
-**Pilihan model:**
-- Random Forest
-- Gradient Boosting (XGBoost, LightGBM, CatBoost)
-- Support Vector Machine (SVM)
-- Ensemble methods
-- Clustering (K-Means, DBSCAN) - untuk unsupervised
-- PCA / dimensionality reduction (untuk preprocessing)
-
-**[Jelaskan model advanced yang Anda pilih dan alasannya]**
+- **Pilihan Model:** XGBoost Classifier
+- **Alasan Pemilihan:** Mampu menangani hubungan non-linear antar variabel tabular iklim, tahan terhadap *outliers*, serta memiliki mekanisme *gradient boosting* yang sangat efektif untuk data terstruktur.
 
 #### **Model 3 – Deep Learning Model (WAJIB)**
 Model deep learning yang sesuai dengan jenis data.
-**Pilihan Implementasi (pilih salah satu sesuai dataset):**
-**A. Tabular Data:**
-- Multilayer Perceptron (MLP) / Neural Network
-- Minimum: 2 hidden layers
-- Contoh: prediksi harga, klasifikasi binary/multiclass
-
-**B. Image Data:**
-- CNN sederhana (minimum 2 convolutional layers) **ATAU**
-- Transfer Learning (ResNet, VGG, MobileNet, EfficientNet) - **recommended**
-- Contoh: klasifikasi gambar, object detection
-
-**C. Text Data:**
-- LSTM/GRU (minimum 1 layer) **ATAU**
-- Embedding + Dense layers **ATAU**
-- Pre-trained model (BERT, DistilBERT, Word2Vec)
-- Contoh: sentiment analysis, text classification
-
-**D. Time Series:**
+**Pilihan Implementasi (pilih salah satu sesuai dataset):**  
+**A. Time Series:**
 - LSTM/GRU untuk sequential prediction
 - Contoh: forecasting, anomaly detection
-
-**E. Recommender Systems:**
-- Neural Collaborative Filtering (NCF)
-- Autoencoder-based Collaborative Filtering
-- Deep Matrix Factorization
+- **Pilihan Model:** Long Short-Term Memory (LSTM) Network
+- **Jenis Deep Learning:** Recurrent Neural Network (RNN) - Time Series / Sequential Prediction
+- **Alasan Pemilihan:** Struktur memori sel LSTM sangat ideal untuk menangkap pola akumulasi temporal, tren sekuensial harian, serta dependensi jangka panjang dari efek El Niño pada parameter cuaca.
 
 **Minimum Requirements untuk Deep Learning:**
 - ✅ Model harus training minimal 10 epochs
@@ -197,8 +163,6 @@ Model deep learning yang sesuai dengan jenis data.
 - ❌ Copy-paste kode tanpa pemahaman
 - ❌ Model tidak di-train (hanya define arsitektur)
 - ❌ Tidak ada evaluasi pada test set
-
-**[Jelaskan model deep learning yang Anda pilih dan alasannya]**
 
 ---
 
