@@ -6,9 +6,11 @@ Prediksi Level Risiko Stres Panas Satu Hari ke Depan bagi Pekerja Lapangan denga
 **Nama Mahasiswa:** 
 1. Alivia Rizka Wardani
 2. Novandy Triarto Wahyono
+
 **NIM:**
 1. 244311035
 2. 244311053 
+
 **Program Studi:** Teknologi Rekayasa Perangkat Lunak  
 **Mata Kuliah:** Data Science 
 **Dosen Pengampu:** Gus Nanang Syaifuddiin, S.Kom., M.Kom.  
