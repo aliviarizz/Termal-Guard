@@ -147,8 +147,6 @@ Model machine learning yang lebih kompleks.
 Model deep learning yang sesuai dengan jenis data.
 **Pilihan Implementasi (pilih salah satu sesuai dataset):**  
 **A. Time Series:**
-- LSTM/GRU untuk sequential prediction
-- Contoh: forecasting, anomaly detection
 - **Pilihan Model:** Long Short-Term Memory (LSTM) Network
 - **Jenis Deep Learning:** Recurrent Neural Network (RNN) - Time Series / Sequential Prediction
 - **Alasan Pemilihan:** Struktur memori sel LSTM sangat ideal untuk menangkap pola akumulasi temporal, tren sekuensial harian, serta dependensi jangka panjang dari efek El Niño pada parameter cuaca.
