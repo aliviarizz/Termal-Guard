@@ -4,12 +4,12 @@
 Prediksi Level Risiko Stres Panas Satu Hari ke Depan bagi Pekerja Lapangan dengan Mempertimbangkan Kondisi El Niño
 
 **Nama Mahasiswa:** 
-1. Alivia Rizka Wardani
-2. Novandy Triarto Wahyono
+1. Novandy Triarto Wahyono
+2. Alivia Rizka Wardani
 
 **NIM:**
-1. 244311035
-2. 244311053 
+1. 244311053
+2. 244311035 
 
 **Program Studi:** Teknologi Rekayasa Perangkat Lunak  
 **Mata Kuliah:** Data Science  
@@ -99,7 +99,7 @@ Ide proyek **berasal dari mahasiswa** dan harus selaras dengan **salah satu** da
 
 ### 2.3 Ringkasan Alur Lifecycle Proyek
 [L] Data cuaca harian ERA5-Land dari tujuh kota dan indeks El Niño dikumpulkan, lalu level risiko hari berikutnya dibentuk dari heat index.    
-[M] Tiga model dirancang: Logistic Regression/Decision Tree sebagai baseline, XGBoost sebagai model advanced, dan LSTM sebagai model deep learning.     
+[M] Tiga model dirancang: Decision Tree sebagai baseline, XGBoost sebagai model advanced, dan LSTM sebagai model deep learning.     
 [O] Model dilatih dan dioptimasi dengan validation set berbasis waktu, termasuk tuning hyperparameter dan penanganan kelas tidak seimbang.     
 [P] Ketiganya dievaluasi pada test set dengan macro F1 dan recall kelas High/Extreme, lalu satu iterasi perbaikan dilakukan berdasarkan temuan evaluasi.    
 
