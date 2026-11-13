@@ -78,6 +78,8 @@ Manfaat proyek: penyedia kerja dan pekerja dapat menyesuaikan jam kerja, waktu i
 > 
 > World Meteorological Organization (WMO). (2024). State of the Global Climate 2023. https://wmo.int/publication-series/state-of-global-climate/state-of-global-climate-2023
 
+> • National Aeronautics and Space Administration (NASA). (2024). NASA Prediction of Worldwide Energy Resources (POWER) Data Access Viewer (Version 2.6.25) [Dataset]. NASA Langley Research Center. nasa.gov
+
 
 ### 2.2 Keterkaitan dengan SDGs (WAJIB)
 
