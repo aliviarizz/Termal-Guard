@@ -135,9 +135,9 @@ Rumuskan masalah dalam kerangka *Learning Problem*:
 Mahasiswa **WAJIB** menggunakan minimal **tiga model** dengan komposisi sebagai berikut:
 #### **Model 1 – Baseline Model**
 Model sederhana sebagai pembanding dasar.
-- **Pilihan Model:** Decision Tree Classifier / Logistic Regression
-- **Alasan Pemilihan:** Model sederhana berbasis aturan logis/linear sebagai *benchmark* awal untuk mengukur kompleksitas batas keputusan data.
-
+- **Pilihan Model:** Decision Tree Classifier
+- **Alasan Pemilihan:** Digunakan sebagai pembanding dasar (*benchmark*) non-linear sederhana berbasis struktur pohon keputusan. Model ini sangat cocok untuk menguji seberapa efektif pemotongan ambang batas (*thresholding*) parameter cuaca sebelum dibagikan ke model *advanced* (XGBoost).
+  
 #### **Model 2 – Advanced / ML Model**
 Model machine learning yang lebih kompleks.
 - **Pilihan Model:** XGBoost Classifier
