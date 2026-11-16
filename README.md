@@ -171,11 +171,11 @@ Model deep learning yang sesuai dengan jenis data.
 **Sumber Dataset:**  
 Dataset pada proyek ini merupakan hasil penggabungan (*merging*) dua sumber data iklim dan meteorologi terbuka:
 1. **Data Cuaca Harian Historis (ERA5-Land via Open-Meteo Historical Weather API):**  
-   - URL: https://open-meteo.com/en/docs/historical-weather-api  
-   - Cakupan: 7 kota di Indonesia (Balikpapan, Jakarta, Jayapura, Madiun, Makassar, Medan, Surabaya) pada periode **1 Januari 2021 – 10 November 2026** (2.140 hari per kota).
+   - URL: https://open-meteo.com/en/docs/historical-weather-api
+   - Cakupan: 7 kota di Indonesia (`Balikpapan`, `Jakarta`, `Jayapura`, `Madiun`, `Makasar`, `Medan`, `Surabaya`) selama periode **1 Januari 2021 – 10 November 2026** (2.140 hari per kota)[cite: 4].
 2. **Data Indeks El Niño (NOAA Climate Prediction Center – Oceanic Niño Index / ONI):**  
-   - URL: https://www.cpc.ncep.noaa.gov/data/indices/oni.ascii.txt  
-   - Cakupan: Nilai rata-rata suhu permukaan laut (*Sea Surface Temperature* / SST) dan anomali 3-bulanan berjalan (*3-month running mean*) pada wilayah Niño 3.4 ($5^\circ\text{N}–5^\circ\text{S}, 120^\circ–170^\circ\text{W}$).
+   - URL: https://www.cpc.ncep.noaa.gov/data/indices/oni.ascii.txt
+   - Cakupan: Nilai rata-rata suhu permukaan laut (*Sea Surface Temperature* / SST) dan anomali 3-bulanan berjalan (*3-month running mean*) di wilayah Niño 3.4 ($5^\circ\text{N}–5^\circ\text{S}, 120^\circ–170^\circ\text{W}$).
 
 **Deskripsi Dataset:**
 - Jumlah baris (rows): [angka]
