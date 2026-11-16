@@ -178,11 +178,11 @@ Dataset pada proyek ini merupakan hasil penggabungan (*merging*) dua sumber data
    - Cakupan: Nilai rata-rata suhu permukaan laut (*Sea Surface Temperature* / SST) dan anomali 3-bulanan berjalan (*3-month running mean*) di wilayah Niño 3.4 ($5^\circ\text{N}–5^\circ\text{S}, 120^\circ–170^\circ\text{W}$).
 
 **Deskripsi Dataset:**
-- Jumlah baris (rows): [angka]
-- Jumlah kolom (columns/features): [angka]
-- Tipe data: [Tabular / Image / Text / Time Series / Audio / Video]
-- Ukuran dataset: [MB/GB]
-- Format file: [CSV / JSON / Images / TXT / etc.]
+- **Jumlah baris (rows):** 14.980 baris (2.140 hari $\times$ 7 kota)[cite: 4]
+- **Jumlah kolom (columns/features):** 29 kolom (27 kolom fitur/identitas/lag + 2 variabel numerik kandidat dasar pembentukan kelas risiko stres panas $t+1$)[cite: 4]
+- **Tipe data:** Time Series Multivariat & Spasial-Tabular (`float64`: 25 kolom, `int64`: 2 kolom, `object`: 2 kolom)[cite: 4]
+- **Ukuran dataset:** 2,31 MB (2.425.756 bytes di disk; 4,73 MB konsumsi memori RAM)[cite: 4]
+- **Format file:** CSV (`.csv`) — `dataset_cuaca_elnino_merged.csv`[cite: 4]
 
 ### 4.2 Deskripsi Fitur
 Jelaskan setiap fitur/kolom yang ada dalam dataset.
