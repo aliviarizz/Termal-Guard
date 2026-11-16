@@ -189,13 +189,35 @@ Jelaskan setiap fitur/kolom yang ada dalam dataset.
 **Contoh tabel:**
 | Nama Fitur | Tipe Data | Deskripsi | Contoh Nilai |
 |------------|-----------|-----------|--------------|
-| id | Integer | ID unik data | 1, 2, 3 |
-| age | Integer | Usia (tahun) | 25, 30, 45 |
-| income | Float | Pendapatan (juta) | 5.5, 10.2 |
-| category | Categorical | Kategori produk | A, B, C |
-| text | String | Teks ulasan | "Produk bagus..." |
-| image | Image | Citra 224x224 RGB | Array 224x224x3 |
-| label | Categorical | Label target | 0, 1 atau "positif", "negatif" |
+| `time` | String (`object`) | Tanggal pencatatan pengamatan cuaca harian (`2021-01-01` s.d. `2026-11-10`, 2.140 hari unik)[cite: 4] | `2021-01-01`, `2021-01-02`, `2021-01-03`[cite: 4] |
+| `kota` | Categorical (`object`) | Nama kota lokasi pengamatan (7 kota unik)[cite: 4] | `Balikpapan`, `Jakarta`, `Jayapura`[cite: 4] |
+| `latitude` | Float (`float64`) | Koordinat garis lintang lokasi pengamatan dalam derajat (`-7.63` s.d. `3.62`, mean `-3.78`)[cite: 4] | `-1.23`, `-6.22`, `-2.57`[cite: 4] |
+| `longitude` | Float (`float64`) | Koordinat garis bujur lokasi pengamatan dalam derajat (`98.69` s.d. `140.70`, mean `115.26`)[cite: 4] | `116.85`, `106.86`, `140.70`[cite: 4] |
+| `elevation` | Float (`float64`) | Ketinggian permukaan lokasi pengamatan dalam meter dpl (`5.00` s.d. `68.00` m, mean `25.71` m)[cite: 4] | `16.00`, `12.00`, `45.00`[cite: 4] |
+| `radiation_sum` | Float (`float64`) | Total radiasi surya gelombang pendek harian dalam $\text{MJ/m}^2$ (`1.04` s.d. `27.31`, mean `18.85`)[cite: 4] | `19.27`, `20.05`, `20.53`[cite: 4] |
+| `temp_max` | Float (`float64`) | Suhu udara maksimum harian pada ketinggian 2 meter dalam $^\circ\text{C}$ (`24.00` s.d. `39.10`, mean `30.72`)[cite: 4] | `30.10`, `29.00`, `30.00`[cite: 4] |
+| `apparent_temp_max` | Float (`float64`) | Suhu terasa (*Heat Index*) maksimum harian pada hari ke-$t$ dalam $^\circ\text{C}$ (`28.10` s.d. `43.40`, mean `36.57`)[cite: 4] | `36.70`, `36.00`, `37.10`[cite: 4] |
+| `wind_speed_max` | Float (`float64`) | Kecepatan angin maksimum harian pada ketinggian 10 meter dalam km/jam (`3.30` s.d. `35.50`, mean `13.09`)[cite: 4] | `11.30`, `9.30`, `10.30`[cite: 4] |
+| `precip_sum` | Float (`float64`) | Total akumulasi curah hujan harian dalam mm (`0.00` s.d. `295.80`, mean `8.37`)[cite: 4] | `10.30`, `7.50`, `15.50`[cite: 4] |
+| `oni_sst_total` | Float (`float64`) | Suhu permukaan laut rata-rata 3-bulanan di wilayah Niño 3.4 dalam $^\circ\text{C}$ (`25.55` s.d. `29.23`, mean `27.15`)[cite: 4] | `25.55`, `25.92`, `26.48`[cite: 4] |
+| `oni_anomaly` | Float (`float64`) | Indeks anomali ONI 3-bulanan bulan berjalan dalam $^\circ\text{C}$ (`-0.99` s.d. `2.46`, mean `0.09`)[cite: 4] | `-0.99`, `-0.85`, `-0.74`[cite: 4] |
+| `oni_anom_lag1m` | Float (`float64`) | Anomali indeks ONI 1 bulan sebelumnya ($m-1$) dalam $^\circ\text{C}$ (`-1.06` s.d. `2.16`, mean `0.03`)[cite: 4] | `-1.06`, `-0.99`, `-0.85`[cite: 4] |
+| `oni_anom_lag2m` | Float (`float64`) | Anomali indeks ONI 2 bulan sebelumnya ($m-2$) dalam $^\circ\text{C}$ (`-1.11` s.d. `1.99`, mean `-0.02`)[cite: 4] | `-1.11`, `-1.06`, `-0.99`[cite: 4] |
+| `oni_anom_lag3m` | Float (`float64`) | Anomali indeks ONI 3 bulan sebelumnya ($m-3$) dalam $^\circ\text{C}$ (`-1.11` s.d. `1.99`, mean `-0.07`)[cite: 4] | `-1.00`, `-1.11`, `-1.06`[cite: 4] |
+| `enso_phase` | Categorical (`float64`) | Fase ENSO berdasarkan ambang ONI $\pm 0,5^\circ\text{C}$ (`-1.0`: La Niña, `0.0`: Netral, `1.0`: El Niño)[cite: 4] | `-1.00`, `0.00`, `1.00`[cite: 4] |
+| `temp_max_lag1d` | Float (`float64`) | Suhu udara maksimum 1 hari sebelumnya ($t-1$) dalam $^\circ\text{C}$ (`24.00` s.d. `39.10`, mean `30.72`)[cite: 4] | `30.10`, `29.00`, `30.00`[cite: 4] |
+| `apparent_temp_lag1d` | Float (`float64`) | Suhu terasa (*Heat Index*) maksimum 1 hari sebelumnya ($t-1$) dalam $^\circ\text{C}$ (`28.10` s.d. `43.40`, mean `36.57`)[cite: 4] | `36.70`, `36.00`, `37.10`[cite: 4] |
+| `precip_lag1d` | Float (`float64`) | Akumulasi curah hujan 1 hari sebelumnya ($t-1$) dalam mm (`0.00` s.d. `295.80`, mean `8.37`)[cite: 4] | `10.30`, `7.50`, `15.50`[cite: 4] |
+| `temp_max_lag2d` | Float (`float64`) | Suhu udara maksimum 2 hari sebelumnya ($t-2$) dalam $^\circ\text{C}$ (`24.00` s.d. `39.10`, mean `30.72`)[cite: 4] | `30.10`, `29.00`, `30.00`[cite: 4] |
+| `apparent_temp_lag2d` | Float (`float64`) | Suhu terasa (*Heat Index*) maksimum 2 hari sebelumnya ($t-2$) dalam $^\circ\text{C}$ (`28.10` s.d. `43.40`, mean `36.57`)[cite: 4] | `36.70`, `36.00`, `37.10`[cite: 4] |
+| `precip_lag2d` | Float (`float64`) | Akumulasi curah hujan 2 hari sebelumnya ($t-2$) dalam mm (`0.00` s.d. `295.80`, mean `8.37`)[cite: 4] | `10.30`, `7.50`, `15.50`[cite: 4] |
+| `temp_max_lag3d` | Float (`float64`) | Suhu udara maksimum 3 hari sebelumnya ($t-3$) dalam $^\circ\text{C}$ (`24.00` s.d. `39.10`, mean `30.72`)[cite: 4] | `30.10`, `29.00`, `30.00`[cite: 4] |
+| `apparent_temp_lag3d` | Float (`float64`) | Suhu terasa (*Heat Index*) maksimum 3 hari sebelumnya ($t-3$) dalam $^\circ\text{C}$ (`28.10` s.d. `43.40`, mean `36.57`)[cite: 4] | `36.70`, `36.00`, `37.10`[cite: 4] |
+| `precip_lag3d` | Float (`float64`) | Akumulasi curah hujan 3 hari sebelumnya ($t-3$) dalam mm (`0.00` s.d. `295.80`, mean `8.38`)[cite: 4] | `10.30`, `7.50`, `15.50`[cite: 4] |
+| `day_of_year` | Integer (`int64`) | Urutan hari dalam kalender tahunan (`1` s.d. `366`, mean `179.34`)[cite: 4] | `1`, `2`, `3`[cite: 4] |
+| `month` | Integer (`int64`) | Bulan kalender (`1` s.d. `12`, mean `6.40`)[cite: 4] | `1`, `2`, `3`[cite: 4] |
+| `target_temp_max_besok` | Float (`float64`) | Suhu udara maksimum 1 hari ke depan ($t+1$) dalam $^\circ\text{C}$ sebagai variabel referensi (`24.00` s.d. `39.10`, mean `30.72`)[cite: 4] | `29.00`, `30.00`, `29.70`[cite: 4] |
+| `target_apparent_temp_besok` | Float (`float64`) | **Dasar Pembentukan Target ($t+1$):** Suhu terasa (*Heat Index*) maksimum 1 hari ke depan (`28.10` s.d. `43.40`, mean `36.57`) yang akan dikategorikan menjadi 4 kelas risiko stres panas (*Low, Moderate, High, Extreme*)[cite: 4] | `36.00`, `37.10`, `35.90`[cite: 4] |
 
 **[Buat tabel deskripsi fitur Anda di sini]**
 
