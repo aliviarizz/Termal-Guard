@@ -225,13 +225,44 @@ Jelaskan setiap fitur/kolom yang ada dalam dataset.
 
 Jelaskan kondisi dan permasalahan data:
 
-- **Missing Values:** [Ada/Tidak, berapa persen?]
-- **Duplicate Data:** [Ada/Tidak, berapa banyak?]
-- **Outliers:** [Ada/Tidak, pada fitur apa?]
-- **Imbalanced Data:** [Ada/Tidak, rasio kelas?]
-- **Noise:** [Jelaskan jika ada]
-- **Data Quality Issues:** [Jelaskan jika ada masalah lain]
-- **Asumsi Data (i.i.d., distribusi train-test, potensi data leakage):** [Jelaskan]
+Berdasarkan hasil pemeriksaan kualitas dan distribusi data pada `dataset_cuaca_elnino_merged.csv` (14.980 baris, 29 kolom)[cite: 4, 8], kondisi dan permasalahan data dirinci sebagai berikut:
+
+- **Missing Values:**  
+  **Ada, sebesar 0,19% dari total dataset (28 baris dari 14.980 baris)**[cite: 8]. Seluruh nilai kosong (`NaN`) bukan berasal dari kerusakan data mentah, melainkan konsekuensi alami dari pergeseran deret waktu (*time-series shifting*) pada batas awal dan akhir setiap kota[cite: 8]:
+  - Fitur historis *lag* 1–3 hari (`temp_max_lag1d` s.d. `precip_lag3d`) memiliki masing-masing **7 `NaN` (0,0467%)** pada tanggal awal `2021-01-01`, **14 `NaN` (0,0935%)** hingga hari ke-2, dan **21 `NaN` (0,1402%)** hingga hari ke-3 di 7 kota[cite: 8].
+  - Variabel target esok hari (`target_temp_max_besok` dan `target_apparent_temp_besok`) memiliki **7 `NaN` (0,0467%)** pada tanggal terakhir `2026-11-10` karena observasi tanggal `2026-11-11` belum tersedia[cite: 8].
+  - Seluruh variabel meteorologi utama dan indeks ONI memiliki **0% *missing values***[cite: 8].
+
+- **Duplicate Data:**  
+  **Tidak ada (0 baris duplikat)**[cite: 8]. Pengecekan duplikasi identik di seluruh 29 kolom maupun duplikasi pada kunci komposit `(kota, time)` menghasilkan **0 baris**[cite: 8], sehingga setiap kota memiliki tepat satu rekaman harian yang unik.
+
+- **Outliers:**  
+  **Ada**, terdeteksi menggunakan metode *Interquartile Range* ($1,5 \times \text{IQR}$) pada seluruh fitur numerik utama[cite: 8]:
+  - `precip_sum`: **666 observasi (4,45%)** melampaui batas atas `29,55 mm` (maksimum `295,80 mm`), merepresentasikan kejadian hujan lebat/badai tropis[cite: 8].
+  - `oni_anomaly`: **497 observasi (3,32%)** melampaui batas atas `+2,17°C` (maksimum `+2,46°C`), merepresentasikan fase puncak El Niño kuat pada tahun 2026[cite: 8].
+  - `wind_speed_max`: **470 observasi (3,14%)** berada di atas `23,25 km/jam` (maksimum `35,50 km/jam`)[cite: 8].
+  - `radiation_sum`: **375 observasi (2,50%)** berada di bawah batas bawah `8,96 MJ/m²` (minimum `1,04 MJ/m²`) akibat tutupan awan tebal[cite: 8].
+  - `temp_max`: **366 observasi (2,44%)** berada di luar rentang `26,05°C – 35,25°C` (maksimum `39,10°C`)[cite: 8].
+  - `apparent_temp_max`: **162 observasi (1,08%)** berada di luar rentang `31,25°C – 42,05°C` (maksimum `43,40°C`)[cite: 8].
+  - *Catatan:* Seluruh *outlier* tersebut merupakan fenomena cuaca ekstrem yang valid secara fisik (bukan *error* sensor), sehingga dipertahankan agar model mampu mengenali kondisi bahaya panas ekstrem.
+
+- **Imbalanced Data:**  
+  **Ada (ketidakseimbangan kelas moderat–tinggi)**[cite: 8]. Hasil simulasi pengkategorian `target_apparent_temp_besok` (14.973 baris valid) menunjukkan[cite: 8]:
+  - Penggunaan ambang batas *Heat Index* NOAA standar subtropis (`<27°C`, `27–32°C`, `32–41°C`, `≥41°C`) menyebabkan kelas `Low (<27°C)` kosong (**0 sampel / 0,00%**) dan kelas `High` mendominasi hingga **97,08% (14.536 sampel)** karena karakteristik iklim tropis Indonesia yang hangat sepanjang tahun[cite: 8].
+  - Dengan kalibrasi ambang batas iklim tropis (`Low: <33°C`, `Moderate: 33–36°C`, `High: 36–39°C`, `Extreme: ≥39°C`), keempat kelas terisi dengan proporsi: **High = 52,23% (7.821 sampel)**, **Moderate = 30,90% (4.627 sampel)**, **Extreme = 11,52% (1.725 sampel)**, dan **Low = 5,34% (800 sampel)** (rasio kelas mayoritas terhadap minoritas sekitar **9,8 : 1**)[cite: 8].
+
+- **Noise:**  
+  **Sangat minimal (data bersih secara fisis)**[cite: 8]. Pemeriksaan konsistensi fisis menunjukkan **0 nilai mustahil** (tidak ada curah hujan, radiasi surya, maupun kecepatan angin bernilai negatif)[cite: 8]. Hanya ditemukan **4 kejadian (0,03%)** lonjakan suhu maksimum harian $\Delta T > 6^\circ\text{C}$ antar hari berturut-turut, yang merepresentasikan perubahan cuaca mendadak (seperti hujan badai setelah hari terik), bukan *noise* acak[cite: 8].
+
+- **Data Quality Issues:**  
+  1. **Perbedaan Resolusi Temporal Antar Sumber:** Data cuaca beresolusi harian, sedangkan indeks ONI NOAA beresolusi rata-rata 3-bulanan berjalan dengan pembaruan terakhir pada musim `ASO 2026` (September 2026)[cite: 1]. Untuk mengisi data cuaca Oktober–November 2026 tanpa membocorkan informasi masa depan, diterapkan metode *forward-fill* (`ffill`) dari nilai ONI valid terakhir (`+2,46°C`)[cite: 1].
+  2. **Kontinuitas Kalender Terjaga:** Pengecekan rentang tanggal harian di seluruh 7 kota memastikan **0 tanggal yang hilang/bolong** antara `2021-01-01` hingga `2026-11-10`[cite: 4, 8].
+  3. **Penyesuaian Rasio Split Kronologis:** Pemotongan langsung pada batas pergantian tahun `2025` ke `2026` menghasilkan rasio **85,37% : 14,63%** (`12.782` vs `2.191` baris)[cite: 8], sehingga pada tahap *Data Splitting* (Bab 5.4) pembagian akan diselaraskan menjadi **Train / Validation / Test** berbasis waktu agar sesuai dengan kebutuhan *tuning* model tanpa kebocoran data.
+
+- **Asumsi Data (i.i.d., distribusi train-test, potensi data leakage):**  
+  1. **Non-i.i.d. (*Autocorrelation* Temporal & Spasial):** Data deret waktu harian saling bergantung antar hari berurutan (*serial correlation*) dan terkelompok per lokasi kota, sehingga **tidak memenuhi asumsi *independent and identically distributed* (i.i.d.)**. Pembagian data wajib menggunakan *chronological split* (urutan waktu), bukan *random split*.
+  2. **Pergeseran Distribusi (*Covariate Shift*) Train vs Test:** Data periode `2021–2025` didominasi kondisi La Niña dan Netral (rata-rata `oni_anomaly = -0,10`), sedangkan periode `2026` didominasi fase El Niño kuat (rata-rata `oni_anomaly = +1,17`)[cite: 8]. Kondisi ini menguji ketangguhan generalisasi model saat menghadapi rezim iklim panas ekstrem.
+  3. **Potensi *Data Leakage*:** Tiga risiko kebocoran data dimitigasi secara ketat: (a) kebocoran antar-kota saat membuat fitur *lag* dan target $t+1$ (dicegah dengan pengelompokan `.groupby('kota')`), (b) kebocoran statistik masa depan saat *scaling* (dicegah dengan melakukan `fit()` *scaler* hanya pada data *training*), dan (c) jeda rilis indeks ONI bulanan di dunia nyata (dimitigasi dengan menyediakan fitur *lag* `oni_anom_lag1m` hingga `oni_anom_lag3m`).
 
 ### 4.4 Exploratory Data Analysis (EDA) - (**OPSIONAL**)
 
