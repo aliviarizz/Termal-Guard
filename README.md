@@ -279,26 +279,29 @@ Berdasarkan hasil pemeriksaan kualitas dan distribusi data pada `dataset_cuaca_e
 - Confusion matrix heatmap
 - Class distribution plot
 
+Eksplorasi data dilakukan untuk memahami variasi spasial risiko stres panas antar kota, memvalidasi pengaruh fenomena El Niño terhadap peningkatan suhu terasa (*Heat Index*), serta mengukur kekuatan korelasi fitur historis dan indeks ONI terhadap target prediksi satu hari ke depan ($t+1$).
 
-#### Visualisasi 1: [Judul Visualisasi]
-[Insert gambar/plot]
-
-**Insight:**  
-[Jelaskan apa yang dapat dipelajari dari visualisasi ini]
-
-#### Visualisasi 2: [Judul Visualisasi]
-
-[Insert gambar/plot]
+#### Visualisasi 1: Proporsi Level Risiko Stres Panas Esok Hari ($t+1$) per Kota
+![Proporsi Level Risiko Stres Panas per Kota](reports/figures/eda_1_distribusi_risiko_per_kota.png)
 
 **Insight:**  
-[Jelaskan apa yang dapat dipelajari dari visualisasi ini]
+- **Variasi Risiko Spasial yang Tajam:** Jakarta (**22,81%**) dan Madiun (**21,18%**) mencatat frekuensi hari berisiko **`Extreme (≥39°C)`** tertinggi dibandingkan kota lainnya, diikuti oleh Medan (**14,31%**) dan Surabaya (**10,05%**). Sebaliknya, Makasar hanya mencatat **0,84%** hari `Extreme` dan didominasi oleh kategori `High` (**50,86%**) serta `Moderate` (**38,76%**).
+- **Dominasi Kelas `High` & Ketimpangan Kelas:** Di seluruh 7 kota, kategori `High (36–39°C)` merupakan kelas mayoritas dengan proporsi antara **44,65% (Balikpapan)** hingga **64,05% (Jayapura)**, sementara kelas `Low (<33°C)` menjadi minoritas ekstrem (hanya **1,87%** di Jayapura hingga **9,54%** di Makasar). Temuan ini mendasari perlunya penggunaan *One-Hot Encoding* fitur lokasi serta penerapan pembobotan kelas (*class weighting*) pada tahap *Data Preparation* dan *Modeling*.
 
-#### Visualisasi 3: [Judul Visualisasi]
-
-[Insert gambar/plot]
+#### Visualisasi 2: Distribusi *Apparent Temperature* (*Heat Index*) Berdasarkan Fase ENSO
+![Distribusi Apparent Temperature Berdasarkan Fase ENSO](reports/figures/eda_2_apparent_temp_vs_enso.png)
 
 **Insight:**  
-[Jelaskan apa yang dapat dipelajari dari visualisasi ini]
+- **Pergeseran Distribusi ke Arah Panas Ekstrem saat El Niño:** Terjadi kenaikan bertahap pada nilai rata-rata dan kuartil atas (*Q75*) *apparent temperature* dari fase **La Niña** ($\text{Mean} = 36,24^\circ\text{C}$, $\text{Q75} = 37,70^\circ\text{C}$), **Netral** ($\text{Mean} = 36,53^\circ\text{C}$, $\text{Q75} = 38,00^\circ\text{C}$), hingga mencapai puncaknya pada fase **El Niño** ($\text{Mean} = 37,09^\circ\text{C}$, $\text{Q75} = 38,60^\circ\text{C}$).
+- **Lonjakan Risiko `Extreme` Hampir 3 Kali Lipat:** Proporsi hari dengan tingkat risiko **`Extreme (≥39°C)`** meningkat tajam dari **7,10%** pada periode La Niña dan **10,30%** pada periode Netral menjadi **19,67%** pada periode El Niño. Hal ini memvalidasi hipotesis bahwa integrasi indikator ENSO relevan untuk meningkatkan kewaspadaan dini bagi pekerja lapangan.
+
+#### Visualisasi 3: Matriks Korelasi Fitur Cuaca Harian, Indeks ONI (*Lag*), dan Target ($t+1$)
+![Matriks Korelasi Fitur Cuaca dan Indeks ONI](reports/figures/eda_3_heatmap_korelasi.png)
+
+**Insight:**  
+- **Autokorelasi Temporal Harian yang Kuat:** Fitur suhu terasa hari ini (`apparent_temp_max`, $r = +0,59$), satu hari lalu (`apparent_temp_lag1d`, $r = +0,52$), dan dua hari lalu (`apparent_temp_lag2d`, $r = +0,49$) memiliki korelasi positif terkuat terhadap `target_apparent_temp_besok`, menegaskan pentingnya memori sekuensial pada arsitektur LSTM maupun fitur *lag* pada model berbasis pohon.
+- **Efek Tunda (*Time-Lag*) Indeks El Niño:** Korelasi indeks anomali ONI terhadap suhu terasa esok hari meningkat pada jeda waktu 2 hingga 3 bulan sebelumnya (`oni_anom_lag3m`: $r = +0,24$; `oni_anom_lag2m`: $r = +0,23$; `oni_anom_lag1m`: $r = +0,21$) dibandingkan indeks bulan berjalan (`oni_anomaly`: $r = +0,18$). Secara klimatologis, anomali suhu muka laut di Pasifik membutuhkan jeda waktu sekitar 2–3 bulan untuk memengaruhi sirkulasi monsun dan suhu permukaan di Indonesia, sekaligus menguntungkan pemodelan operasional karena fitur *lag* 1–3 bulan sudah tersedia tanpa jeda rilis data.
+- **Korelasi Negatif Presipitasi & Angin:** Curah hujan (`precip_sum`, $r = -0,17$) dan kecepatan angin maksimum (`wind_speed_max`, $r = -0,13$) berkorelasi negatif terhadap suhu terasa esok hari karena efek pendinginan evaporatif dan tutupan awan hujan.
 
 ---
 
