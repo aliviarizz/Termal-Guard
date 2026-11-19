@@ -1,4 +1,5 @@
-﻿# DATA & DATASET (Abaikan data mentah/besar)
+/data/processed/
+# DATA & DATASET (Abaikan data mentah/besar)
 data/*.csv
 data/*.json
 data/*.parquet
