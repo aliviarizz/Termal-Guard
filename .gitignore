@@ -1,0 +1,32 @@
+﻿# DATA & DATASET (Abaikan data mentah/besar)
+data/*.csv
+data/*.json
+data/*.parquet
+!data/.gitkeep
+
+# PYTHON ENVIRONMENT & CACHE
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+ENV/
+.env
+
+# JUPYTER NOTEBOOK CHECKPOINTS
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/
+
+# MODEL CHECKPOINTS & ARTIFACTS
+models/*.h5
+models/*.pkl
+models/*.keras
+models/*.joblib
+!models/.gitkeep
+
+# IDE & OPERATING SYSTEM FILES
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
