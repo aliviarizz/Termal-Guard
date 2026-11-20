@@ -178,106 +178,91 @@ Dataset pada proyek ini merupakan hasil penggabungan (*merging*) dua sumber data
    - Cakupan: Nilai rata-rata suhu permukaan laut (*Sea Surface Temperature* / SST) dan anomali 3-bulanan berjalan (*3-month running mean*) di wilayah Niño 3.4 ($5^\circ\text{N}–5^\circ\text{S}, 120^\circ–170^\circ\text{W}$).
 
 **Deskripsi Dataset:**
-- **Jumlah baris (rows):** 14.980 baris (2.140 hari $\times$ 7 kota)[cite: 4]
-- **Jumlah kolom (columns/features):** 29 kolom (27 kolom fitur/identitas/lag + 2 variabel numerik kandidat dasar pembentukan kelas risiko stres panas $t+1$)[cite: 4]
-- **Tipe data:** Time Series Multivariat & Spasial-Tabular (`float64`: 25 kolom, `int64`: 2 kolom, `object`: 2 kolom)[cite: 4]
-- **Ukuran dataset:** 2,31 MB (2.425.756 bytes di disk; 4,73 MB konsumsi memori RAM)[cite: 4]
-- **Format file:** CSV (`.csv`) — `dataset_cuaca_elnino_merged.csv`[cite: 4]
+- **Jumlah baris (rows):** 14.980 baris (2.140 hari $\times$ 7 kota)
+- **Jumlah kolom (columns/features):** 29 kolom (27 kolom fitur/identitas/lag + 2 variabel numerik kandidat dasar pembentukan kelas risiko stres panas $t+1$)
+- **Tipe data:** Time Series Multivariat & Spasial-Tabular (`float64`: 25 kolom, `int64`: 2 kolom, `object`: 2 kolom)
+- **Ukuran dataset:** 2,31 MB (2.425.756 bytes di disk; 4,73 MB konsumsi memori RAM)
+- **Format file:** CSV (`.csv`) — `dataset_cuaca_elnino_merged.csv`
 
 ### 4.2 Deskripsi Fitur
 Jelaskan setiap fitur/kolom yang ada dalam dataset.
 **Contoh tabel:**
 | Nama Fitur | Tipe Data | Deskripsi | Contoh Nilai |
 |------------|-----------|-----------|--------------|
-| `time` | String (`object`) | Tanggal pencatatan pengamatan cuaca harian (`2021-01-01` s.d. `2026-11-10`, 2.140 hari unik)[cite: 4] | `2021-01-01`, `2021-01-02`, `2021-01-03`[cite: 4] |
-| `kota` | Categorical (`object`) | Nama kota lokasi pengamatan (7 kota unik)[cite: 4] | `Balikpapan`, `Jakarta`, `Jayapura`[cite: 4] |
-| `latitude` | Float (`float64`) | Koordinat garis lintang lokasi pengamatan dalam derajat (`-7.63` s.d. `3.62`, mean `-3.78`)[cite: 4] | `-1.23`, `-6.22`, `-2.57`[cite: 4] |
-| `longitude` | Float (`float64`) | Koordinat garis bujur lokasi pengamatan dalam derajat (`98.69` s.d. `140.70`, mean `115.26`)[cite: 4] | `116.85`, `106.86`, `140.70`[cite: 4] |
-| `elevation` | Float (`float64`) | Ketinggian permukaan lokasi pengamatan dalam meter dpl (`5.00` s.d. `68.00` m, mean `25.71` m)[cite: 4] | `16.00`, `12.00`, `45.00`[cite: 4] |
-| `radiation_sum` | Float (`float64`) | Total radiasi surya gelombang pendek harian dalam $\text{MJ/m}^2$ (`1.04` s.d. `27.31`, mean `18.85`)[cite: 4] | `19.27`, `20.05`, `20.53`[cite: 4] |
-| `temp_max` | Float (`float64`) | Suhu udara maksimum harian pada ketinggian 2 meter dalam $^\circ\text{C}$ (`24.00` s.d. `39.10`, mean `30.72`)[cite: 4] | `30.10`, `29.00`, `30.00`[cite: 4] |
-| `apparent_temp_max` | Float (`float64`) | Suhu terasa (*Heat Index*) maksimum harian pada hari ke-$t$ dalam $^\circ\text{C}$ (`28.10` s.d. `43.40`, mean `36.57`)[cite: 4] | `36.70`, `36.00`, `37.10`[cite: 4] |
-| `wind_speed_max` | Float (`float64`) | Kecepatan angin maksimum harian pada ketinggian 10 meter dalam km/jam (`3.30` s.d. `35.50`, mean `13.09`)[cite: 4] | `11.30`, `9.30`, `10.30`[cite: 4] |
-| `precip_sum` | Float (`float64`) | Total akumulasi curah hujan harian dalam mm (`0.00` s.d. `295.80`, mean `8.37`)[cite: 4] | `10.30`, `7.50`, `15.50`[cite: 4] |
-| `oni_sst_total` | Float (`float64`) | Suhu permukaan laut rata-rata 3-bulanan di wilayah Niño 3.4 dalam $^\circ\text{C}$ (`25.55` s.d. `29.23`, mean `27.15`)[cite: 4] | `25.55`, `25.92`, `26.48`[cite: 4] |
-| `oni_anomaly` | Float (`float64`) | Indeks anomali ONI 3-bulanan bulan berjalan dalam $^\circ\text{C}$ (`-0.99` s.d. `2.46`, mean `0.09`)[cite: 4] | `-0.99`, `-0.85`, `-0.74`[cite: 4] |
-| `oni_anom_lag1m` | Float (`float64`) | Anomali indeks ONI 1 bulan sebelumnya ($m-1$) dalam $^\circ\text{C}$ (`-1.06` s.d. `2.16`, mean `0.03`)[cite: 4] | `-1.06`, `-0.99`, `-0.85`[cite: 4] |
-| `oni_anom_lag2m` | Float (`float64`) | Anomali indeks ONI 2 bulan sebelumnya ($m-2$) dalam $^\circ\text{C}$ (`-1.11` s.d. `1.99`, mean `-0.02`)[cite: 4] | `-1.11`, `-1.06`, `-0.99`[cite: 4] |
-| `oni_anom_lag3m` | Float (`float64`) | Anomali indeks ONI 3 bulan sebelumnya ($m-3$) dalam $^\circ\text{C}$ (`-1.11` s.d. `1.99`, mean `-0.07`)[cite: 4] | `-1.00`, `-1.11`, `-1.06`[cite: 4] |
-| `enso_phase` | Categorical (`float64`) | Fase ENSO berdasarkan ambang ONI $\pm 0,5^\circ\text{C}$ (`-1.0`: La Niña, `0.0`: Netral, `1.0`: El Niño)[cite: 4] | `-1.00`, `0.00`, `1.00`[cite: 4] |
-| `temp_max_lag1d` | Float (`float64`) | Suhu udara maksimum 1 hari sebelumnya ($t-1$) dalam $^\circ\text{C}$ (`24.00` s.d. `39.10`, mean `30.72`)[cite: 4] | `30.10`, `29.00`, `30.00`[cite: 4] |
-| `apparent_temp_lag1d` | Float (`float64`) | Suhu terasa (*Heat Index*) maksimum 1 hari sebelumnya ($t-1$) dalam $^\circ\text{C}$ (`28.10` s.d. `43.40`, mean `36.57`)[cite: 4] | `36.70`, `36.00`, `37.10`[cite: 4] |
-| `precip_lag1d` | Float (`float64`) | Akumulasi curah hujan 1 hari sebelumnya ($t-1$) dalam mm (`0.00` s.d. `295.80`, mean `8.37`)[cite: 4] | `10.30`, `7.50`, `15.50`[cite: 4] |
-| `temp_max_lag2d` | Float (`float64`) | Suhu udara maksimum 2 hari sebelumnya ($t-2$) dalam $^\circ\text{C}$ (`24.00` s.d. `39.10`, mean `30.72`)[cite: 4] | `30.10`, `29.00`, `30.00`[cite: 4] |
-| `apparent_temp_lag2d` | Float (`float64`) | Suhu terasa (*Heat Index*) maksimum 2 hari sebelumnya ($t-2$) dalam $^\circ\text{C}$ (`28.10` s.d. `43.40`, mean `36.57`)[cite: 4] | `36.70`, `36.00`, `37.10`[cite: 4] |
-| `precip_lag2d` | Float (`float64`) | Akumulasi curah hujan 2 hari sebelumnya ($t-2$) dalam mm (`0.00` s.d. `295.80`, mean `8.37`)[cite: 4] | `10.30`, `7.50`, `15.50`[cite: 4] |
-| `temp_max_lag3d` | Float (`float64`) | Suhu udara maksimum 3 hari sebelumnya ($t-3$) dalam $^\circ\text{C}$ (`24.00` s.d. `39.10`, mean `30.72`)[cite: 4] | `30.10`, `29.00`, `30.00`[cite: 4] |
-| `apparent_temp_lag3d` | Float (`float64`) | Suhu terasa (*Heat Index*) maksimum 3 hari sebelumnya ($t-3$) dalam $^\circ\text{C}$ (`28.10` s.d. `43.40`, mean `36.57`)[cite: 4] | `36.70`, `36.00`, `37.10`[cite: 4] |
-| `precip_lag3d` | Float (`float64`) | Akumulasi curah hujan 3 hari sebelumnya ($t-3$) dalam mm (`0.00` s.d. `295.80`, mean `8.38`)[cite: 4] | `10.30`, `7.50`, `15.50`[cite: 4] |
-| `day_of_year` | Integer (`int64`) | Urutan hari dalam kalender tahunan (`1` s.d. `366`, mean `179.34`)[cite: 4] | `1`, `2`, `3`[cite: 4] |
-| `month` | Integer (`int64`) | Bulan kalender (`1` s.d. `12`, mean `6.40`)[cite: 4] | `1`, `2`, `3`[cite: 4] |
-| `target_temp_max_besok` | Float (`float64`) | Suhu udara maksimum 1 hari ke depan ($t+1$) dalam $^\circ\text{C}$ sebagai variabel referensi (`24.00` s.d. `39.10`, mean `30.72`)[cite: 4] | `29.00`, `30.00`, `29.70`[cite: 4] |
-| `target_apparent_temp_besok` | Float (`float64`) | **Dasar Pembentukan Target ($t+1$):** Suhu terasa (*Heat Index*) maksimum 1 hari ke depan (`28.10` s.d. `43.40`, mean `36.57`) yang akan dikategorikan menjadi 4 kelas risiko stres panas (*Low, Moderate, High, Extreme*)[cite: 4] | `36.00`, `37.10`, `35.90`[cite: 4] |
-
-**[Buat tabel deskripsi fitur Anda di sini]**
+| `time` | String (`object`) | Tanggal pencatatan pengamatan cuaca harian (`2021-01-01` s.d. `2026-11-10`, 2.140 hari unik) | `2021-01-01`, `2021-01-02`, `2021-01-03` |
+| `kota` | Categorical (`object`) | Nama kota lokasi pengamatan (7 kota unik) | `Balikpapan`, `Jakarta`, `Jayapura` |
+| `latitude` | Float (`float64`) | Koordinat garis lintang lokasi pengamatan dalam derajat (`-7.63` s.d. `3.62`, mean `-3.78`) | `-1.23`, `-6.22`, `-2.57` |
+| `longitude` | Float (`float64`) | Koordinat garis bujur lokasi pengamatan dalam derajat (`98.69` s.d. `140.70`, mean `115.26`) | `116.85`, `106.86`, `140.70` |
+| `elevation` | Float (`float64`) | Ketinggian permukaan lokasi pengamatan dalam meter dpl (`5.00` s.d. `68.00` m, mean `25.71` m) | `16.00`, `12.00`, `45.00` |
+| `radiation_sum` | Float (`float64`) | Total radiasi surya gelombang pendek harian dalam $\text{MJ/m}^2$ (`1.04` s.d. `27.31`, mean `18.85`) | `19.27`, `20.05`, `20.53` |
+| `temp_max` | Float (`float64`) | Suhu udara maksimum harian pada ketinggian 2 meter dalam $^\circ\text{C}$ (`24.00` s.d. `39.10`, mean `30.72`) | `30.10`, `29.00`, `30.00` |
+| `apparent_temp_max` | Float (`float64`) | Suhu terasa (*Heat Index*) maksimum harian pada hari ke-$t$ dalam $^\circ\text{C}$ (`28.10` s.d. `43.40`, mean `36.57`) | `36.70`, `36.00`, `37.10` |
+| `wind_speed_max` | Float (`float64`) | Kecepatan angin maksimum harian pada ketinggian 10 meter dalam km/jam (`3.30` s.d. `35.50`, mean `13.09`) | `11.30`, `9.30`, `10.30` |
+| `precip_sum` | Float (`float64`) | Total akumulasi curah hujan harian dalam mm (`0.00` s.d. `295.80`, mean `8.37`) | `10.30`, `7.50`, `15.50` |
+| `oni_sst_total` | Float (`float64`) | Suhu permukaan laut rata-rata 3-bulanan di wilayah Niño 3.4 dalam $^\circ\text{C}$ (`25.55` s.d. `29.23`, mean `27.15`) | `25.55`, `25.92`, `26.48` |
+| `oni_anomaly` | Float (`float64`) | Indeks anomali ONI 3-bulanan bulan berjalan dalam $^\circ\text{C}$ (`-0.99` s.d. `2.46`, mean `0.09`) | `-0.99`, `-0.85`, `-0.74` |
+| `oni_anom_lag1m` | Float (`float64`) | Anomali indeks ONI 1 bulan sebelumnya ($m-1$) dalam $^\circ\text{C}$ (`-1.06` s.d. `2.16`, mean `0.03`) | `-1.06`, `-0.99`, `-0.85` |
+| `oni_anom_lag2m` | Float (`float64`) | Anomali indeks ONI 2 bulan sebelumnya ($m-2$) dalam $^\circ\text{C}$ (`-1.11` s.d. `1.99`, mean `-0.02`) | `-1.11`, `-1.06`, `-0.99` |
+| `oni_anom_lag3m` | Float (`float64`) | Anomali indeks ONI 3 bulan sebelumnya ($m-3$) dalam $^\circ\text{C}$ (`-1.11` s.d. `1.99`, mean `-0.07`) | `-1.00`, `-1.11`, `-1.06` |
+| `enso_phase` | Categorical (`float64`) | Fase ENSO berdasarkan ambang ONI $\pm 0,5^\circ\text{C}$ (`-1.0`: La Niña, `0.0`: Netral, `1.0`: El Niño) | `-1.00`, `0.00`, `1.00` |
+| `temp_max_lag1d` | Float (`float64`) | Suhu udara maksimum 1 hari sebelumnya ($t-1$) dalam $^\circ\text{C}$ (`24.00` s.d. `39.10`, mean `30.72`) | `30.10`, `29.00`, `30.00` |
+| `apparent_temp_lag1d` | Float (`float64`) | Suhu terasa (*Heat Index*) maksimum 1 hari sebelumnya ($t-1$) dalam $^\circ\text{C}$ (`28.10` s.d. `43.40`, mean `36.57`) | `36.70`, `36.00`, `37.10` |
+| `precip_lag1d` | Float (`float64`) | Akumulasi curah hujan 1 hari sebelumnya ($t-1$) dalam mm (`0.00` s.d. `295.80`, mean `8.37`) | `10.30`, `7.50`, `15.50` |
+| `temp_max_lag2d` | Float (`float64`) | Suhu udara maksimum 2 hari sebelumnya ($t-2$) dalam $^\circ\text{C}$ (`24.00` s.d. `39.10`, mean `30.72`) | `30.10`, `29.00`, `30.00` |
+| `apparent_temp_lag2d` | Float (`float64`) | Suhu terasa (*Heat Index*) maksimum 2 hari sebelumnya ($t-2$) dalam $^\circ\text{C}$ (`28.10` s.d. `43.40`, mean `36.57`) | `36.70`, `36.00`, `37.10` |
+| `precip_lag2d` | Float (`float64`) | Akumulasi curah hujan 2 hari sebelumnya ($t-2$) dalam mm (`0.00` s.d. `295.80`, mean `8.37`) | `10.30`, `7.50`, `15.50` |
+| `temp_max_lag3d` | Float (`float64`) | Suhu udara maksimum 3 hari sebelumnya ($t-3$) dalam $^\circ\text{C}$ (`24.00` s.d. `39.10`, mean `30.72`) | `30.10`, `29.00`, `30.00` |
+| `apparent_temp_lag3d` | Float (`float64`) | Suhu terasa (*Heat Index*) maksimum 3 hari sebelumnya ($t-3$) dalam $^\circ\text{C}$ (`28.10` s.d. `43.40`, mean `36.57`) | `36.70`, `36.00`, `37.10` |
+| `precip_lag3d` | Float (`float64`) | Akumulasi curah hujan 3 hari sebelumnya ($t-3$) dalam mm (`0.00` s.d. `295.80`, mean `8.38`) | `10.30`, `7.50`, `15.50` |
+| `day_of_year` | Integer (`int64`) | Urutan hari dalam kalender tahunan (`1` s.d. `366`, mean `179.34`) | `1`, `2`, `3` |
+| `month` | Integer (`int64`) | Bulan kalender (`1` s.d. `12`, mean `6.40`) | `1`, `2`, `3` |
+| `target_temp_max_besok` | Float (`float64`) | Suhu udara maksimum 1 hari ke depan ($t+1$) dalam $^\circ\text{C}$ sebagai variabel referensi (`24.00` s.d. `39.10`, mean `30.72`) | `29.00`, `30.00`, `29.70` |
+| `target_apparent_temp_besok` | Float (`float64`) | **Dasar Pembentukan Target ($t+1$):** Suhu terasa (*Heat Index*) maksimum 1 hari ke depan (`28.10` s.d. `43.40`, mean `36.57`) yang akan dikategorikan menjadi 4 kelas risiko stres panas (*Low, Moderate, High, Extreme*) | `36.00`, `37.10`, `35.90` |
 
 ### 4.3 Kondisi Data
 
-Jelaskan kondisi dan permasalahan data:
+Kondisi dan permasalahan data:
 
-Berdasarkan hasil pemeriksaan kualitas dan distribusi data pada `dataset_cuaca_elnino_merged.csv` (14.980 baris, 29 kolom)[cite: 4, 8], kondisi dan permasalahan data dirinci sebagai berikut:
+Berdasarkan hasil pemeriksaan kualitas dan distribusi data pada `dataset_cuaca_elnino_merged.csv` (14.980 baris, 29 kolom), kondisi dan permasalahan data dirinci sebagai berikut:
 
 - **Missing Values:**  
-  **Ada, sebesar 0,19% dari total dataset (28 baris dari 14.980 baris)**[cite: 8]. Seluruh nilai kosong (`NaN`) bukan berasal dari kerusakan data mentah, melainkan konsekuensi alami dari pergeseran deret waktu (*time-series shifting*) pada batas awal dan akhir setiap kota[cite: 8]:
-  - Fitur historis *lag* 1–3 hari (`temp_max_lag1d` s.d. `precip_lag3d`) memiliki masing-masing **7 `NaN` (0,0467%)** pada tanggal awal `2021-01-01`, **14 `NaN` (0,0935%)** hingga hari ke-2, dan **21 `NaN` (0,1402%)** hingga hari ke-3 di 7 kota[cite: 8].
-  - Variabel target esok hari (`target_temp_max_besok` dan `target_apparent_temp_besok`) memiliki **7 `NaN` (0,0467%)** pada tanggal terakhir `2026-11-10` karena observasi tanggal `2026-11-11` belum tersedia[cite: 8].
-  - Seluruh variabel meteorologi utama dan indeks ONI memiliki **0% *missing values***[cite: 8].
+  **Ada, sebesar 0,19% dari total dataset (28 baris dari 14.980 baris)**. Seluruh nilai kosong (`NaN`) bukan berasal dari kerusakan data mentah, melainkan konsekuensi alami dari pergeseran deret waktu (*time-series shifting*) pada batas awal dan akhir setiap kota:
+  - Fitur historis *lag* 1–3 hari (`temp_max_lag1d` s.d. `precip_lag3d`) memiliki masing-masing **7 `NaN` (0,0467%)** pada tanggal awal `2021-01-01`, **14 `NaN` (0,0935%)** hingga hari ke-2, dan **21 `NaN` (0,1402%)** hingga hari ke-3 di 7 kota.
+  - Variabel target esok hari (`target_temp_max_besok` dan `target_apparent_temp_besok`) memiliki **7 `NaN` (0,0467%)** pada tanggal terakhir `2026-11-10` karena observasi tanggal `2026-11-11` belum tersedia.
+  - Seluruh variabel meteorologi utama dan indeks ONI memiliki **0% *missing values***.
 
 - **Duplicate Data:**  
-  **Tidak ada (0 baris duplikat)**[cite: 8]. Pengecekan duplikasi identik di seluruh 29 kolom maupun duplikasi pada kunci komposit `(kota, time)` menghasilkan **0 baris**[cite: 8], sehingga setiap kota memiliki tepat satu rekaman harian yang unik.
+  **Tidak ada (0 baris duplikat)**. Pengecekan duplikasi identik di seluruh 29 kolom maupun duplikasi pada kunci komposit `(kota, time)` menghasilkan **0 baris**, sehingga setiap kota memiliki tepat satu rekaman harian yang unik.
 
 - **Outliers:**  
-  **Ada**, terdeteksi menggunakan metode *Interquartile Range* ($1,5 \times \text{IQR}$) pada seluruh fitur numerik utama[cite: 8]:
-  - `precip_sum`: **666 observasi (4,45%)** melampaui batas atas `29,55 mm` (maksimum `295,80 mm`), merepresentasikan kejadian hujan lebat/badai tropis[cite: 8].
-  - `oni_anomaly`: **497 observasi (3,32%)** melampaui batas atas `+2,17°C` (maksimum `+2,46°C`), merepresentasikan fase puncak El Niño kuat pada tahun 2026[cite: 8].
-  - `wind_speed_max`: **470 observasi (3,14%)** berada di atas `23,25 km/jam` (maksimum `35,50 km/jam`)[cite: 8].
-  - `radiation_sum`: **375 observasi (2,50%)** berada di bawah batas bawah `8,96 MJ/m²` (minimum `1,04 MJ/m²`) akibat tutupan awan tebal[cite: 8].
-  - `temp_max`: **366 observasi (2,44%)** berada di luar rentang `26,05°C – 35,25°C` (maksimum `39,10°C`)[cite: 8].
-  - `apparent_temp_max`: **162 observasi (1,08%)** berada di luar rentang `31,25°C – 42,05°C` (maksimum `43,40°C`)[cite: 8].
+  **Ada**, terdeteksi menggunakan metode *Interquartile Range* ($1,5 \times \text{IQR}$) pada seluruh fitur numerik utama:
+  - `precip_sum`: **666 observasi (4,45%)** melampaui batas atas `29,55 mm` (maksimum `295,80 mm`), merepresentasikan kejadian hujan lebat/badai tropis.
+  - `oni_anomaly`: **497 observasi (3,32%)** melampaui batas atas `+2,17°C` (maksimum `+2,46°C`), merepresentasikan fase puncak El Niño kuat pada tahun 2026.
+  - `wind_speed_max`: **470 observasi (3,14%)** berada di atas `23,25 km/jam` (maksimum `35,50 km/jam`).
+  - `radiation_sum`: **375 observasi (2,50%)** berada di bawah batas bawah `8,96 MJ/m²` (minimum `1,04 MJ/m²`) akibat tutupan awan tebal.
+  - `temp_max`: **366 observasi (2,44%)** berada di luar rentang `26,05°C – 35,25°C` (maksimum `39,10°C`).
+  - `apparent_temp_max`: **162 observasi (1,08%)** berada di luar rentang `31,25°C – 42,05°C` (maksimum `43,40°C`).
   - *Catatan:* Seluruh *outlier* tersebut merupakan fenomena cuaca ekstrem yang valid secara fisik (bukan *error* sensor), sehingga dipertahankan agar model mampu mengenali kondisi bahaya panas ekstrem.
 
 - **Imbalanced Data:**  
-  **Ada (ketidakseimbangan kelas moderat–tinggi)**[cite: 8]. Hasil simulasi pengkategorian `target_apparent_temp_besok` (14.973 baris valid) menunjukkan[cite: 8]:
-  - Penggunaan ambang batas *Heat Index* NOAA standar subtropis (`<27°C`, `27–32°C`, `32–41°C`, `≥41°C`) menyebabkan kelas `Low (<27°C)` kosong (**0 sampel / 0,00%**) dan kelas `High` mendominasi hingga **97,08% (14.536 sampel)** karena karakteristik iklim tropis Indonesia yang hangat sepanjang tahun[cite: 8].
-  - Dengan kalibrasi ambang batas iklim tropis (`Low: <33°C`, `Moderate: 33–36°C`, `High: 36–39°C`, `Extreme: ≥39°C`), keempat kelas terisi dengan proporsi: **High = 52,23% (7.821 sampel)**, **Moderate = 30,90% (4.627 sampel)**, **Extreme = 11,52% (1.725 sampel)**, dan **Low = 5,34% (800 sampel)** (rasio kelas mayoritas terhadap minoritas sekitar **9,8 : 1**)[cite: 8].
+  **Ada (ketidakseimbangan kelas moderat–tinggi)**. Hasil simulasi pengkategorian `target_apparent_temp_besok` (14.973 baris valid) menunjukkan:
+  - Penggunaan ambang batas *Heat Index* NOAA standar subtropis (`<27°C`, `27–32°C`, `32–41°C`, `≥41°C`) menyebabkan kelas `Low (<27°C)` kosong (**0 sampel / 0,00%**) dan kelas `High` mendominasi hingga **97,08% (14.536 sampel)** karena karakteristik iklim tropis Indonesia yang hangat sepanjang tahun.
+  - Dengan kalibrasi ambang batas iklim tropis (`Low: <33°C`, `Moderate: 33–36°C`, `High: 36–39°C`, `Extreme: ≥39°C`), keempat kelas terisi dengan proporsi: **High = 52,23% (7.821 sampel)**, **Moderate = 30,90% (4.627 sampel)**, **Extreme = 11,52% (1.725 sampel)**, dan **Low = 5,34% (800 sampel)** (rasio kelas mayoritas terhadap minoritas sekitar **9,8 : 1**).
 
 - **Noise:**  
-  **Sangat minimal (data bersih secara fisis)**[cite: 8]. Pemeriksaan konsistensi fisis menunjukkan **0 nilai mustahil** (tidak ada curah hujan, radiasi surya, maupun kecepatan angin bernilai negatif)[cite: 8]. Hanya ditemukan **4 kejadian (0,03%)** lonjakan suhu maksimum harian $\Delta T > 6^\circ\text{C}$ antar hari berturut-turut, yang merepresentasikan perubahan cuaca mendadak (seperti hujan badai setelah hari terik), bukan *noise* acak[cite: 8].
+  **Sangat minimal (data bersih secara fisis)**. Pemeriksaan konsistensi fisis menunjukkan **0 nilai mustahil** (tidak ada curah hujan, radiasi surya, maupun kecepatan angin bernilai negatif). Hanya ditemukan **4 kejadian (0,03%)** lonjakan suhu maksimum harian $\Delta T > 6^\circ\text{C}$ antar hari berturut-turut, yang merepresentasikan perubahan cuaca mendadak (seperti hujan badai setelah hari terik), bukan *noise* acak.
 
 - **Data Quality Issues:**  
-  1. **Perbedaan Resolusi Temporal Antar Sumber:** Data cuaca beresolusi harian, sedangkan indeks ONI NOAA beresolusi rata-rata 3-bulanan berjalan dengan pembaruan terakhir pada musim `ASO 2026` (September 2026)[cite: 1]. Untuk mengisi data cuaca Oktober–November 2026 tanpa membocorkan informasi masa depan, diterapkan metode *forward-fill* (`ffill`) dari nilai ONI valid terakhir (`+2,46°C`)[cite: 1].
-  2. **Kontinuitas Kalender Terjaga:** Pengecekan rentang tanggal harian di seluruh 7 kota memastikan **0 tanggal yang hilang/bolong** antara `2021-01-01` hingga `2026-11-10`[cite: 4, 8].
-  3. **Penyesuaian Rasio Split Kronologis:** Pemotongan langsung pada batas pergantian tahun `2025` ke `2026` menghasilkan rasio **85,37% : 14,63%** (`12.782` vs `2.191` baris)[cite: 8], sehingga pada tahap *Data Splitting* (Bab 5.4) pembagian akan diselaraskan menjadi **Train / Validation / Test** berbasis waktu agar sesuai dengan kebutuhan *tuning* model tanpa kebocoran data.
+  1. **Perbedaan Resolusi Temporal Antar Sumber:** Data cuaca beresolusi harian, sedangkan indeks ONI NOAA beresolusi rata-rata 3-bulanan berjalan dengan pembaruan terakhir pada musim `ASO 2026` (September 2026). Untuk mengisi data cuaca Oktober–November 2026 tanpa membocorkan informasi masa depan, diterapkan metode *forward-fill* (`ffill`) dari nilai ONI valid terakhir (`+2,46°C`).
+  2. **Kontinuitas Kalender Terjaga:** Pengecekan rentang tanggal harian di seluruh 7 kota memastikan **0 tanggal yang hilang/bolong** antara `2021-01-01` hingga `2026-11-10`.
+  3. **Penyesuaian Rasio Split Kronologis:** Pemotongan langsung pada batas pergantian tahun `2025` ke `2026` menghasilkan rasio **85,37% : 14,63%** (`12.782` vs `2.191` baris), sehingga pada tahap *Data Splitting* (Bab 5.4) pembagian akan diselaraskan menjadi **Train / Validation / Test** berbasis waktu agar sesuai dengan kebutuhan *tuning* model tanpa kebocoran data.
 
 - **Asumsi Data (i.i.d., distribusi train-test, potensi data leakage):**  
   1. **Non-i.i.d. (*Autocorrelation* Temporal & Spasial):** Data deret waktu harian saling bergantung antar hari berurutan (*serial correlation*) dan terkelompok per lokasi kota, sehingga **tidak memenuhi asumsi *independent and identically distributed* (i.i.d.)**. Pembagian data wajib menggunakan *chronological split* (urutan waktu), bukan *random split*.
-  2. **Pergeseran Distribusi (*Covariate Shift*) Train vs Test:** Data periode `2021–2025` didominasi kondisi La Niña dan Netral (rata-rata `oni_anomaly = -0,10`), sedangkan periode `2026` didominasi fase El Niño kuat (rata-rata `oni_anomaly = +1,17`)[cite: 8]. Kondisi ini menguji ketangguhan generalisasi model saat menghadapi rezim iklim panas ekstrem.
+  2. **Pergeseran Distribusi (*Covariate Shift*) Train vs Test:** Data periode `2021–2025` didominasi kondisi La Niña dan Netral (rata-rata `oni_anomaly = -0,10`), sedangkan periode `2026` didominasi fase El Niño kuat (rata-rata `oni_anomaly = +1,17`). Kondisi ini menguji ketangguhan generalisasi model saat menghadapi rezim iklim panas ekstrem.
   3. **Potensi *Data Leakage*:** Tiga risiko kebocoran data dimitigasi secara ketat: (a) kebocoran antar-kota saat membuat fitur *lag* dan target $t+1$ (dicegah dengan pengelompokan `.groupby('kota')`), (b) kebocoran statistik masa depan saat *scaling* (dicegah dengan melakukan `fit()` *scaler* hanya pada data *training*), dan (c) jeda rilis indeks ONI bulanan di dunia nyata (dimitigasi dengan menyediakan fitur *lag* `oni_anom_lag1m` hingga `oni_anom_lag3m`).
 
 ### 4.4 Exploratory Data Analysis (EDA) - (**OPSIONAL**)
-
-**Requirement:** Minimal 3 visualisasi yang bermakna dan insight-nya.
-**Contoh jenis visualisasi yang dapat digunakan:**
-- Histogram (distribusi data)
-- Boxplot (deteksi outliers)
-- Heatmap korelasi (hubungan antar fitur)
-- Bar plot (distribusi kategori)
-- Scatter plot (hubungan 2 variabel)
-- Wordcloud (untuk text data)
-- Sample images (untuk image data)
-- Time series plot (untuk temporal data)
-- Confusion matrix heatmap
-- Class distribution plot
 
 Eksplorasi data dilakukan untuk memahami variasi spasial risiko stres panas antar kota, memvalidasi pengaruh fenomena El Niño terhadap peningkatan suhu terasa (*Heat Index*), serta mengukur kekuatan korelasi fitur historis dan indeks ONI terhadap target prediksi satu hari ke depan ($t+1$).
 
@@ -322,7 +307,7 @@ Pipeline data preparation dijalankan di [`notebooks/02_data_preparation.ipynb`](
 - Target `heat_risk_besok` dibentuk dari `target_apparent_temp_besok` dengan `pd.cut(..., right=False)` dan batas `[-∞, 33, 36, 39, ∞]`: **0 Low**, **1 Moderate**, **2 High**, **3 Extreme**. Pada data bersih, jumlah kelas berturut-turut adalah **796**, **4.618**, **7.813**, dan **1.725** sampel.
 - Fitur baru: `sin_doy` dan `cos_doy` (periode 365,25 hari), `temp_range_or_heat_gap` (`apparent_temp_max - temp_max`), serta `apparent_temp_diff_1d` (`apparent_temp_max - apparent_temp_lag1d`).
 - Untuk mencegah leakage, fitur input tidak memuat `target_temp_max_besok`, `target_apparent_temp_besok`, `oni_anomaly`, atau `oni_sst_total`. `time` hanya menjadi indeks kronologis; `day_of_year` mentah digantikan oleh fitur siklikal. Fitur historis ONI (`oni_anom_lag1m`–`oni_anom_lag3m`) dan `enso_phase` dipertahankan.
-- Matriks sebelum encoding terdiri dari **27 kolom**; setelah `kota` di-one-hot menjadi **33 fitur**.
+- Matriks sebelum encoding terdiri dari **27 kolom**, setelah `kota` di-one-hot menjadi **33 fitur**.
 
 ### 5.3 Data Transformation
 
