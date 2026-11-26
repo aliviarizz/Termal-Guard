@@ -351,112 +351,271 @@ Pipeline data preparation dijalankan di [`notebooks/02_data_preparation.ipynb`](
 
 > Setiap model (6.1, 6.2, 6.3) dijelaskan dalam dua fase: **Model Design [M]** (sub-bagian .1–.3) dan **Optimization [O]** (sub-bagian .4–.6).
 
-### 6.1 Model 1 — Baseline Model
+### 6.1 Model 1 — Baseline: Decision Tree Classifier
 
 #### 6.1.1 Deskripsi Model  **[M]**
 
-**Nama Model:** [Nama model, misal: Logistic Regression]  
+**Nama Model:** Decision Tree Classifier (CART — Classification and Regression Trees)
+
 **Teori Singkat:**  
-[Jelaskan secara singkat bagaimana model ini bekerja]  
+Decision Tree adalah model pohon hierarki yang membagi ruang fitur secara rekursif menggunakan aturan *if-else* berbasis threshold (nilai ambang batas) pada satu fitur di setiap node. Algoritma CART memilih split yang meminimalkan kriteria impurity (Gini impurity atau Entropy) di setiap langkah secara *greedy* (lokal-optimal). Prediksi kelas dilakukan berdasarkan kelas mayoritas pada daun (leaf node) yang dicapai oleh data.
+
 **Alasan Pemilihan:**  
-[Mengapa memilih model ini sebagai baseline?]
+Decision Tree dipilih sebagai model baseline karena:
+1. **Data tabular iklim multivariat** — dataset terdiri dari 32 fitur cuaca numerik dan kategorikal (kota) yang diproses secara tabular, bukan sekuensial. Decision Tree sangat efisien untuk data tabular.
+2. **Hubungan non-linear berbasis ambang batas** — risiko stres panas secara fisiologis terikat pada nilai *threshold* (mis. suhu >38°C → High, >40°C → Extreme). Decision Tree secara alami menangkap struktur ini.
+3. **Interpretabilitas** — sebagai baseline, Decision Tree mudah diinterpretasikan untuk memvalidasi apakah model menangkap pengetahuan domain.
+4. **Pembanding awal sebelum boosting** — perlu model sederhana untuk mengukur besarnya peningkatan yang diberikan oleh XGBoost (Model 2).
 
 #### 6.1.2 Hypothesis Space & Inductive Bias  **[M]**
 
-- **Model family / arsitektur:** [misal: model linear]
-- **Hypothesis space:** [himpunan fungsi yang dapat direpresentasikan, misal: batas keputusan linear]
-- **Inductive bias / asumsi:** [misal: hubungan fitur-target linear, fitur independen]
-- **Implikasi terhadap dataset Anda:** [apakah asumsi cocok dengan data?]
+- **Model family / arsitektur:** Pohon keputusan tunggal (*single decision tree*), model non-parametrik berbasis partisi hierarki ruang fitur.
+- **Hypothesis space:** Himpunan semua fungsi *piecewise-constant axis-aligned* pada ruang fitur ℝ³². Setiap fungsi didefinisikan oleh sekumpulan aturan threshold berbentuk `fᵢ ≤ θ` yang membentuk hiperplane sejajar sumbu koordinat. Kapasitas hipothesis space bertumbuh eksponensial dengan kedalaman pohon.
+- **Inductive bias / asumsi:**
+  - *Greedy split*: pemilihan split dilakukan secara lokal-optimal di setiap node (bukan global-optimal), sehingga pohon tidak dijamin menemukan partisi terbaik secara global.
+  - *Axis-aligned boundaries*: batas keputusan harus sejajar sumbu fitur; tidak dapat menangkap hubungan diagonal atau interaksi fitur yang halus tanpa membutuhkan banyak node.
+  - *Piecewise-constant*: prediksi dalam satu leaf bersifat konstan (kelas mayoritas), sehingga tidak dapat memperkirakan gradasi probabilitas dalam leaf yang heterogen.
+  - *Hierarki ambang batas*: asumsi bahwa data dapat dipartisi bersih oleh aturan threshold sekuensial — cocok untuk hubungan cuaca-risiko yang bersifat threshold (mis. WBGT > 32°C → Extreme).
+- **Implikasi terhadap dataset cuaca multivariat non-i.i.d.:**
+  - **Pro:** Hubungan non-linear berbasis ambang batas suhu/hujan/angin memang sesuai dengan inductive bias Decision Tree.
+  - **Kontra:** Tanpa batasan `max_depth`, Decision Tree dengan 1 pohon cenderung *overfitting parah* pada time-series meteorologi karena setiap kombinasi nilai lag-fitur membentuk leaf tersendiri. Hal ini terbukti pada hasil (Train Macro F1 = 1.0000 vs Val Macro F1 = 0.3679).
+  - Data time-series bersifat non-i.i.d. (ada autokorelasi temporal) yang tidak secara eksplisit dimodelkan oleh Decision Tree — model tidak tahu bahwa sampel hari-t berkorelasi dengan hari t-1.
 
 #### 6.1.3 Implementasi (Ringkas)  **[M]**
-```python
-# Contoh kode (opsional, bisa dipindah ke GitHub)
-from sklearn.linear_model import LogisticRegression
 
-model_baseline = LogisticRegression(C=1.0, max_iter=100)
-model_baseline.fit(X_train, y_train)
-y_pred_baseline = model_baseline.predict(X_test)
+Implementasi lengkap tersedia di `notebooks/03_model_design_baseline_ml.ipynb`.
+
+```python
+from sklearn.tree import DecisionTreeClassifier
+
+# Class weights dari class_weights.json (map ke integer)
+# {0: 4.3615, 1: 0.7907, 2: 0.4880, 3: 2.1901}
+
+baseline_model = DecisionTreeClassifier(
+    criterion="gini",
+    max_depth=None,   # Tanpa batas → pohon tumbuh penuh
+    random_state=42,
+    class_weight=class_weights  # Menangani imbalanced data
+)
+baseline_model.fit(X_train, y_train)
+y_pred_val = baseline_model.predict(X_val)
 ```
 
 #### 6.1.4 Optimization: Objective, Hyperparameter & Regularisasi  **[O]**
 
-**Objective/loss yang dioptimalkan:** [misal: log-loss + L2]  
-**Parameter yang digunakan:**
+**Objective/loss yang dioptimalkan:** Gini Impurity minimization di setiap node split.  
+Gini impurity: $G(t) = 1 - \sum_{k=0}^{K-1} p(k|t)^2$
+
+**Parameter yang digunakan (sesuai `03_model_design_baseline_ml.ipynb`):**
 ```
-[Tuliskan parameter penting, contoh:]
-- C (regularization): 1.0
-- solver: 'lbfgs'
-- max_iter: 100
+- criterion   : "gini"      # Gini impurity sebagai split criterion
+- max_depth   : None        # Pohon tumbuh penuh tanpa batas kedalaman
+- random_state: 42          # Reproducibility
+- class_weight: {0: 4.3615, 1: 0.7907, 2: 0.4880, 3: 2.1901}
+                            # Bobot inversely proportional terhadap frekuensi kelas
+                            # untuk menangani imbalanced data (rasio ~9.8:1)
 ```
+
+**Catatan:** Pada Minggu 4, parameter regularisasi seperti `max_depth`, `min_samples_leaf`,  
+dan `min_samples_split` akan dituning untuk mengurangi overfitting.
 
 #### 6.1.5 Hasil Awal  **[O → P]**
 
-**[Tuliskan hasil awal pada validation set; evaluasi akhir pada test set dijelaskan di Bab 7]**
+Hasil evaluasi pada **Validation Set 2025** (`X_val.csv`, `y_val.csv`) dari `03_model_design_baseline_ml.ipynb`:
+
+| Metrik | Nilai |
+|--------|-------|
+| **Validation Accuracy** | **0.5033 (50.33%)** |
+| **Validation Macro F1** | **0.3679** |
+| Validation Weighted F1 | 0.5021 |
+| Training Macro F1 | 1.0000 (100.00%) |
+| Train-Val Gap | 0.6321 (**Overfitting Parah**) |
+| Waktu Training | 0.1780 detik |
+
+**Classification Report (Validation Set 2025):**
+```
+                    precision    recall  f1-score   support
+
+     Class 0 (Low)       0.17      0.15      0.16       117
+Class 1 (Moderate)       0.42      0.42      0.42       750
+    Class 2 (High)       0.61      0.62      0.62      1425
+ Class 3 (Extreme)       0.28      0.29      0.28       263
+
+          accuracy                           0.50      2555
+         macro avg       0.37      0.37      0.37      2555
+      weighted avg       0.50      0.50      0.50      2555
+```
+
+**Analisis:** Model mengalami **overfitting parah** (gap 0.63). Train Macro F1 = 1.0 menunjukkan  
+pohon menghafal seluruh data training, namun hanya generalisasi 36.79% pada validation set.  
+Recall kelas Extreme (0.29) sangat rendah — 71% kondisi ekstrem tidak terdeteksi, berbahaya  
+untuk keselamatan pekerja lapangan.
 
 ---
 
-### 6.2 Model 2 — ML / Advanced Model
+### 6.2 Model 2 — Advanced ML: XGBoost Classifier
 
 #### 6.2.1 Deskripsi Model  **[M]**
 
-**Nama Model:** [Nama model, misal: Random Forest / XGBoost]  
-**Teori Singkat:**  
-[Jelaskan bagaimana algoritma ini bekerja]
+**Nama Model:** XGBoost Classifier — eXtreme Gradient Boosting (Chen & Guestrin, 2016)
 
-**Alasan Pemilihan:**  
-[Mengapa memilih model ini?]
+**Teori Singkat:**  
+XGBoost adalah implementasi *Gradient Boosted Decision Trees* (GBDT) yang sangat dioptimalkan.  
+Model dibangun secara **sekuensial aditif**: setiap pohon baru ($T_m$) dilatih untuk memperbaiki  
+*residual error* pohon-pohon sebelumnya, dengan mengoptimalkan fungsi objektif menggunakan  
+**aproksimasi Taylor orde kedua** (memanfaatkan gradien dan Hessian).
+
+Fungsi prediksi ensemble: $\hat{y}_i = \sum_{m=1}^{M} \eta \cdot T_m(\mathbf{x}_i)$
+
+Fungsi objektif per iterasi (dengan regularisasi L1/L2):  
+$\mathcal{L}^{(m)} = \sum_{i} l(y_i, \hat{y}_i^{(m-1)} + T_m(\mathbf{x}_i)) + \Omega(T_m)$  
+$\Omega(T) = \gamma J + \frac{1}{2}\lambda \sum_{j=1}^{J} w_j^2 + \alpha \sum_{j=1}^{J} |w_j|$
+
+di mana $\gamma$ = penalti jumlah leaf, $\lambda$ = L2 regularisasi bobot leaf, $\alpha$ = L1.
+
+**Alasan Pemilihan:**
+1. **Hubungan non-linear kompleks antar variabel atmosferik & lag ONI** — interaksi antara `apparent_temp_max`, `oni_anom_lag1m`–`lag3m`, `precip_sum`, dan `wind_speed_max` bersifat non-linear dan tidak dapat ditangkap model sederhana.
+2. **Tahan terhadap outlier hujan/suhu ekstrem** — GBDT berbasis tree tidak sensitif terhadap skala atau outlier, cocok untuk data cuaca yang memiliki distribusi non-normal.
+3. **Mendukung `sample_weight`** — XGBClassifier multikelas mendukung bobot per sampel untuk menangani *imbalanced data* (kelas Low:Extreme = 9.8:1 dalam dataset ini).
+4. **Regularisasi built-in** — L1/L2 pada bobot leaf dan pruning berbasis gain (`gamma`) mencegah overfitting yang parah terjadi pada Decision Tree.
 
 **Keunggulan:**
-- [Sebutkan keunggulan]
+- Performa tinggi pada data tabular (sering juara di kompetisi Kaggle)
+- Regularisasi L1/L2 built-in mencegah overfitting
+- Mendukung `sample_weight` dan `eval_metric` untuk multikelas
+- Feature importance tersedia (weight/gain/cover) untuk interpretasi
+- Efisien secara komputasi (parallel tree construction, cache-aware)
 
 **Kelemahan:**
-- [Sebutkan kelemahan]
+- Tidak secara eksplisit memodelkan ketergantungan temporal (time-series bukan *native use case*)
+- Hyperparameter yang banyak membutuhkan tuning yang lebih kompleks
+- Training lebih lama dibanding Decision Tree tunggal (~7.2s vs ~0.18s)
+- Kurang interpretable dibanding pohon tunggal (black-box ensemble)
 
 #### 6.2.2 Hypothesis Space & Inductive Bias  **[M]**
 
-- **Model family / arsitektur:** [misal: ensemble pohon keputusan]
-- **Hypothesis space:** [fungsi non-linear piecewise, interaksi fitur otomatis, dll.]
-- **Inductive bias / asumsi:** [misal: data tabular dengan struktur ambang/threshold]
-- **Perbandingan dengan baseline:** [apa yang bisa dipelajari model ini yang tidak bisa baseline?]
+- **Model family / arsitektur:** Ensemble aditif dari $M$ pohon keputusan (*Gradient Boosted Decision Trees*), model non-parametrik sekuensial.
+- **Hypothesis space:** Himpunan semua kombinasi linear dari $M$ fungsi *piecewise-constant axis-aligned* (pohon keputusan) pada ruang fitur ℝ³². Kapasitas jauh lebih besar dari pohon tunggal — dapat merepresentasikan batas keputusan yang sangat kompleks dan interaksi fitur otomatis melalui komposisi sequential.
+- **Inductive bias / asumsi:**
+  - *Boosting sekuensial*: setiap pohon memperbaiki error pohon sebelumnya — cocok untuk data di mana error bersifat terstruktur (misalnya, hari-hari El Niño yang salah diprediksi oleh pohon awal).
+  - *Regularisasi kompleksitas daun*: penalti $\gamma$ dan $\lambda$ mendorong model memilih pohon yang lebih sederhana (lebih sedikit leaf) secara eksplisit — mengurangi overfitting.
+  - *Subsampling stokastik*: `subsample=0.8` dan `colsample_bytree=0.8` memperkenalkan randomisasi seperti Random Forest — mengurangi korelasi antar pohon dan meningkatkan generalisasi.
+  - *Threshold berbasis fitur*: warisan dari decision tree — masih mengandalkan pemisahan axis-aligned, cocok untuk data dengan ambang batas cuaca yang mendefinisikan level risiko.
+- **Perbandingan dengan Decision Tree baseline:**
+  - Decision Tree membangun 1 pohon besar yang hafal training data (overfitting).
+  - XGBoost membangun 200 pohon kecil (`max_depth=6`) yang masing-masing mempelajari *residual* — ensemble lebih robust dan generalisasi lebih baik.
+  - XGBoost dapat menangkap **interaksi fitur yang lebih halus** (mis. `apparent_temp_max × oni_anom_lag2m`) melalui komposisi sequential trees.
+  - Regularisasi eksplisit di XGBoost mengontrol bias-variance trade-off yang tidak ada di Decision Tree dengan `max_depth=None`.
 
 #### 6.2.3 Implementasi (Ringkas)  **[M]**
-```python
-# Contoh kode
-from sklearn.ensemble import RandomForestClassifier
 
-model_advanced = RandomForestClassifier(
-    n_estimators=100,
-    max_depth=10,
-    random_state=42
+Implementasi lengkap tersedia di `notebooks/03_model_design_advanced_ml.ipynb`.
+
+```python
+import numpy as np
+from xgboost import XGBClassifier
+
+# Bangun sample_weight dari class_weights.json
+# {0: 4.3615, 1: 0.7907, 2: 0.4880, 3: 2.1901}
+sample_weight_train = np.array([class_weights[label] for label in y_train])
+
+# Inisialisasi XGBoost Classifier
+xgb_model = XGBClassifier(
+    objective="multi:softprob",   # Multikelas, output probabilitas
+    num_class=4,                   # 4 kelas: Low, Moderate, High, Extreme
+    eval_metric="mlogloss",        # Multi-class log loss
+    n_estimators=200,              # 200 boosting rounds
+    max_depth=6,                   # Kedalaman maksimal per pohon
+    learning_rate=0.1,             # Step size shrinkage (eta)
+    subsample=0.8,                 # Subsampling baris per iterasi
+    colsample_bytree=0.8,          # Subsampling fitur per pohon
+    random_state=42,               # Reproducibility
+    n_jobs=-1,                     # Gunakan semua CPU cores
 )
-model_advanced.fit(X_train, y_train)
-y_pred_advanced = model_advanced.predict(X_test)
+
+# Training dengan sample_weight (imbalanced data handling)
+xgb_model.fit(X_train, y_train, sample_weight=sample_weight_train)
+y_pred_val = xgb_model.predict(X_val)
 ```
 
 #### 6.2.4 Optimization: Hyperparameter Tuning  **[O]**
 
-**Parameter yang digunakan:**
+**Parameter awal yang digunakan (konfigurasi LKM 12):**
 ```
-[Tuliskan parameter penting, contoh:]
-- n_estimators: 100
-- max_depth: 10
-- learning_rate: 0.1
-- min_samples_split: 2
+- objective         : "multi:softprob"   # Klasifikasi multikelas, output probabilitas per kelas
+- num_class         : 4                  # 4 level risiko
+- eval_metric       : "mlogloss"         # Monitoring log-loss multikelas
+- n_estimators      : 200                # Jumlah pohon boosting
+- max_depth         : 6                  # Kedalaman maksimal (regularisasi kompleksitas)
+- learning_rate     : 0.1               # Step size shrinkage (eta)
+- subsample         : 0.8               # Fraksi sampel per iterasi (stochastic gradient)
+- colsample_bytree  : 0.8               # Fraksi fitur per pohon (feature subsampling)
+- random_state      : 42                # Reproducibility
+- n_jobs            : -1                # Parallelisasi CPU
 ```
 
-**Hyperparameter Tuning (WAJIB minimal 1 metode sederhana):**
-- Metode: [Grid Search / Random Search / Bayesian Optimization]
-- Search space: [rentang parameter yang dicoba]
-- Skema validasi: [k-fold CV / validation set]
-- Best parameters: [...]
-- Skor validasi sebelum vs sesudah tuning: [...]
+> **Catatan:** Hyperparameter tuning lanjutan (Grid Search / Optuna) akan dilengkapi pada **Minggu 4**  
+> (sesuai timeline LKM). Parameter yang akan dituning meliputi: `max_depth`, `n_estimators`,  
+> `learning_rate`, `reg_alpha` (L1), `reg_lambda` (L2), `min_child_weight`, `gamma`,  
+> dan penggunaan *early stopping* dengan validation set.
 
 #### 6.2.5 Kontrol Overfitting  **[O]**
-[Jelaskan regularisasi/pembatasan kompleksitas yang dipakai, misal: max_depth, min_samples_leaf, early stopping pada boosting]
 
-#### 6.2.6 Hasil Model  **[O → P]**
+Mekanisme regularisasi/overfitting control pada XGBoost yang digunakan:
 
-**[Tuliskan hasil pada validation set; evaluasi akhir dijelaskan di Bab 7]**
+| Mekanisme | Parameter | Nilai | Efek |
+|-----------|-----------|-------|------|
+| **Kedalaman pohon** | `max_depth` | 6 | Membatasi kompleksitas per pohon (vs Decision Tree: tak terbatas) |
+| **Subsampling baris** | `subsample` | 0.8 | 20% sampel tidak digunakan per iterasi → mencegah memorization |
+| **Subsampling fitur** | `colsample_bytree` | 0.8 | 20% fitur tidak digunakan per pohon → diversifikasi |
+| **Learning rate** | `learning_rate` | 0.1 | Shrinkage → kontribusi setiap pohon dikecilkan |
+
+> **Catatan:** Pada Minggu 4, akan ditambahkan: `reg_alpha` (L1), `reg_lambda` (L2),  
+> `gamma` (pruning threshold), `min_child_weight`, dan *early stopping* pada validation loss.
+
+#### 6.2.6 Hasil Awal  **[O → P]**
+
+Hasil evaluasi pada **Validation Set 2025** dari `notebooks/03_model_design_advanced_ml.ipynb`:
+
+| Metrik | Decision Tree (Baseline) | XGBoost (Advanced) | Delta |
+|--------|--------------------------|---------------------|-------|
+| **Val Accuracy** | 0.5033 (50.33%) | **0.5476 (54.76%)** | +4.43% |
+| **Val Macro F1** | 0.3679 | **0.4479** | **+0.0800** |
+| Val Weighted F1 | 0.5021 | 0.5527 | +0.0506 |
+| **Recall High (2)** | 0.6200 | **0.6070** | −0.0130 |
+| **Recall Extreme (3)** | 0.2900 | **0.5361** | **+0.2461** |
+| Train Macro F1 | 1.0000 | 0.9093 | — |
+| Train-Val Gap | 0.6321 (Overfitting Parah) | 0.4614 (Overfitting Parah) | — |
+| **Waktu Training** | 0.1780 s | 7.1915 s | +7.0s |
+
+**Classification Report XGBoost (Validation Set 2025):**
+```
+                    precision    recall  f1-score   support
+
+     Class 0 (Low)       0.26      0.23      0.24       117
+Class 1 (Moderate)       0.48      0.49      0.48       750
+    Class 2 (High)       0.67      0.61      0.64      1425
+ Class 3 (Extreme)       0.36      0.54      0.43       263
+
+          accuracy                           0.55      2555
+         macro avg       0.44      0.47      0.45      2555
+      weighted avg       0.56      0.55      0.55      2555
+```
+
+**Analisis Perbandingan:**
+- **Macro F1 meningkat signifikan** (+0.08): XGBoost (0.4479) lebih seimbang dibanding Decision Tree (0.3679) dalam memprediksi semua kelas.
+- **Recall Extreme naik drastis** (+24.61pp): dari 0.29 → 0.54. Perbaikan kritis untuk keselamatan pekerja — lebih banyak kondisi ekstrem terdeteksi.
+- **Overfitting masih ada** tetapi berkurang: gap 0.4614 (XGBoost) vs 0.6321 (Decision Tree). Regularisasi XGBoost mulai efektif namun hyperparameter tuning lanjutan diperlukan.
+- **Trade-off waktu training**: XGBoost 40× lebih lambat (7.19s vs 0.18s) namun hasilnya lebih baik secara signifikan.
+
+**Top 5 Fitur Paling Penting (berdasarkan feature importance):**
+1. `apparent_temp_max` (0.1485) — suhu terasa maksimum, fitur paling dominan
+2. `apparent_temp_lag1d` (0.0522) — lag suhu terasa 1 hari
+3. `kota_Jayapura` (0.0499) — lokasi geografis
+4. `temp_max` (0.0438) — suhu udara maksimum
+5. `kota_Makasar` (0.0424) — lokasi geografis
+
+Fitur El Niño: `oni_anom_lag2m` (0.0316, rank 7) dan `oni_anom_lag3m` (0.0290, rank 10) masuk Top 15, membuktikan relevansi kondisi ENSO dalam prediksi risiko stres panas.
 
 ---
 
