@@ -292,8 +292,6 @@ Eksplorasi data dilakukan untuk memahami variasi spasial risiko stres panas anta
 
 ## 5. DATA PREPARATION  **[L]**
 
-## 5. DATA PREPARATION  **[L]**
-
 Pipeline data preparation dijalankan di [`notebooks/02_data_preparation.ipynb`](notebooks/02_data_preparation.ipynb). Seluruh preprocessing mengikuti urutan waktu; statistik transformasi hanya dipelajari dari data train.
 
 ### 5.1 Data Cleaning
@@ -386,17 +384,18 @@ except Exception as e:
 
 #### 6.1.4 Optimization: Objective, Hyperparameter & Regularisasi  **[O]**
 
-**Objective/loss yang dioptimalkan:** Minimasi Gini Impurity ($G$) pada setiap pemisahan node:$$G = 1 - \sum_{i=0}^{3} p_i^2$$di mana $p_i$ adalah proporsi sampel kelas $i \in \{0, 1, 2, 3\}$ pada node tersebut.
+**Objective/loss yang dioptimalkan:** Minimasi Gini Impurity ($G$) pada setiap pemisahan node:
+
+$$G = 1 - \sum_{i=0}^{3} p_i^2$$
+
+  di mana $p_i$ adalah proporsi sampel kelas $i \in \{0, 1, 2, 3\}$ pada node tersebut.
 
 **Parameter yang digunakan (sesuai `03_model_design_baseline_ml.ipynb`):**
 ```
-criterion: 'gini' (fungsi pengukur kualitas pemisahan node).
-
-max_depth: None (pohon dibiarkan tumbuh maksimum tanpa batasan kedalaman / tanpa regularisasi awal).
-
-class_weight: class_weights (penyeimbangan bobot loss berdasarkan invers frekuensi kelas untuk mengatasi imbalanced data).
-
-random_state: 42 (menjaga konsistensi dan reproducibility eksperimen).
+* `criterion`: `'gini'` (fungsi pengukur kualitas pemisahan node)
+* `max_depth`: `None` (pohon dibiarkan tumbuh penuh tanpa batasan kedalaman)
+* `class_weight`: `class_weights` (penyeimbangan bobot loss berdasarkan invers frekuensi kelas untuk menangani data tidak seimbang)
+* `random_state`: `42` (menjaga konsistensi eksperimen)
 ```
 
 **Catatan:** Pada Minggu 4, parameter regularisasi seperti `max_depth`, `min_samples_leaf`,  
@@ -429,9 +428,11 @@ Class 1 (Moderate)       0.42      0.42      0.42       750
       weighted avg       0.50      0.50      0.50      2555
 ```
 
-**Analisis:** Model baseline Decision Tree (max_depth=None) mengalami overfitting parah dengan Train-Val Gap sebesar 0.6321. Nilai Training Macro F1 = 1.0000 menunjukkan bahwa pohon keputusan menghafal seluruh pola data latih secara sempurna, namun hanya mampu bergeneralisasi sebesar 36.79% pada validation set tahun 2025.
+**Analisis:** 
+Model baseline Decision Tree (max_depth=None) mengalami overfitting parah dengan Train-Val Gap sebesar 0.6321. Nilai Training Macro F1 = 1.0000 menunjukkan bahwa pohon keputusan menghafal seluruh pola data latih secara sempurna, namun hanya mampu bergeneralisasi sebesar 36.79% pada validation set tahun 2025.
 
 Selain itu, performa pada kelas bahaya tinggi tergolong buruk: Recall pada Class 3 (Extreme) hanya sebesar 0.29. Hal ini menandakan bahwa 71% kondisi cuaca ekstrem gagal terdeteksi oleh model baseline, yang sangat berisiko apabila diaplikasikan pada keselamatan kerja di lapangan. Angka Validation Macro F1 = 0.3679 ini menjadi acuan benchmark dasar yang harus dilampaui oleh pemodelan tingkat lanjut (advanced model).
+
 ---
 
 ### 6.2 Model 2 — Advanced ML: XGBoost Classifier
