@@ -292,6 +292,8 @@ Eksplorasi data dilakukan untuk memahami variasi spasial risiko stres panas anta
 
 ## 5. DATA PREPARATION  **[L]**
 
+## 5. DATA PREPARATION  **[L]**
+
 Pipeline data preparation dijalankan di [`notebooks/02_data_preparation.ipynb`](notebooks/02_data_preparation.ipynb). Seluruh preprocessing mengikuti urutan waktu; statistik transformasi hanya dipelajari dari data train.
 
 ### 5.1 Data Cleaning
@@ -306,15 +308,15 @@ Pipeline data preparation dijalankan di [`notebooks/02_data_preparation.ipynb`](
 
 - Target `heat_risk_besok` dibentuk dari `target_apparent_temp_besok` dengan `pd.cut(..., right=False)` dan batas `[-∞, 33, 36, 39, ∞]`: **0 Low**, **1 Moderate**, **2 High**, **3 Extreme**. Pada data bersih, jumlah kelas berturut-turut adalah **796**, **4.618**, **7.813**, dan **1.725** sampel.
 - Fitur baru: `sin_doy` dan `cos_doy` (periode 365,25 hari), `temp_range_or_heat_gap` (`apparent_temp_max - temp_max`), serta `apparent_temp_diff_1d` (`apparent_temp_max - apparent_temp_lag1d`).
-- Untuk mencegah leakage, fitur input tidak memuat `target_temp_max_besok`, `target_apparent_temp_besok`, `oni_anomaly`, atau `oni_sst_total`. `time` hanya menjadi indeks kronologis; `day_of_year` mentah digantikan oleh fitur siklikal. Fitur historis ONI (`oni_anom_lag1m`–`oni_anom_lag3m`) dan `enso_phase` dipertahankan.
-- Matriks sebelum encoding terdiri dari **27 kolom**, setelah `kota` di-one-hot menjadi **33 fitur**.
+- Untuk mencegah leakage, fitur input tidak memuat `target_temp_max_besok`, `target_apparent_temp_besok`, `oni_anomaly`, `oni_sst_total`, maupun `enso_phase` (yang diturunkan dari ONI bulan berjalan dengan jeda publikasi NOAA). `time` hanya menjadi indeks kronologis; `day_of_year` mentah digantikan oleh fitur siklikal. Fitur historis ONI (`oni_anom_lag1m`–`oni_anom_lag3m`) dipertahankan.
+- Matriks sebelum encoding terdiri dari **26 kolom**, setelah `kota` di-one-hot menjadi **32 fitur**.
 
 ### 5.3 Data Transformation
 
-- **Decision Tree dan XGBoost:** fitur `kota` di-one-hot encode menjadi tujuh kolom identik pada seluruh split. Sebanyak 26 fitur numerik kontinyu distandardisasi dengan `StandardScaler`; fitur biner one-hot tidak di-scale. `fit()` hanya dilakukan pada `X_train`, lalu scaler yang sama mentransformasi validation dan test.
+- **Decision Tree dan XGBoost:** fitur `kota` di-one-hot encode menjadi tujuh kolom identik pada seluruh split. Sebanyak 25 fitur numerik kontinyu distandardisasi dengan `StandardScaler`; fitur biner one-hot tidak di-scale. `fit()` hanya dilakukan pada `X_train`, lalu scaler yang sama mentransformasi validation dan test.
 - **LSTM:** sliding window tujuh hari dibentuk terpisah untuk masing-masing kota dan split. Label sequence adalah target `t+1` pada baris terakhir window; jendela tidak menyeberangi batas kota maupun split. Enam baris awal per kota pada setiap split tidak menjadi sequence.
-- Bentuk data tabular: `X_train` **10.206 × 33**, `X_val` **2.555 × 33**, `X_test` **2.191 × 33**.
-- Bentuk sequence: `X_train_seq` **(10.164, 7, 33)**, `X_val_seq` **(2.513, 7, 33)**, `X_test_seq` **(2.149, 7, 33)**; array label masing-masing berukuran **10.164**, **2.513**, dan **2.149**.
+- Bentuk data tabular: `X_train` **10.206 × 32**, `X_val` **2.555 × 32**, `X_test` **2.191 × 32**.
+- Bentuk sequence: `X_train_seq` **(10.164, 7, 32)**, `X_val_seq` **(2.513, 7, 32)**, `X_test_seq` **(2.149, 7, 32)**; array label masing-masing berukuran **10.164**, **2.513**, dan **2.149**.
 
 ### 5.4 Data Splitting
 
@@ -338,9 +340,9 @@ Pipeline data preparation dijalankan di [`notebooks/02_data_preparation.ipynb`](
 | Tahap | Apa | Mengapa | Bagaimana |
 |---|---|---|---|
 | Cleaning | Menghapus NaN dan memeriksa duplikat; mempertahankan outlier valid. | Menyediakan observasi lengkap tanpa mengubah kejadian cuaca ekstrem. | `dropna()` menghasilkan 14.952 baris (2.136 per kota), 0 NaN, 0 duplikat. |
-| Feature engineering/selection | Membuat target 4 kelas, fitur musim siklikal, heat gap, dan perubahan suhu; membuang kolom leakage. | Menyediakan prediktor temporal yang tersedia secara operasional tanpa target masa depan atau ONI bulan berjalan. | Ambang tropis 33/36/39°C; fitur lag ONI dipertahankan; 33 fitur sesudah one-hot. |
+| Feature engineering/selection | Membuat target 4 kelas, fitur musim siklikal, heat gap, dan perubahan suhu; membuang kolom leakage. | Menyediakan prediktor temporal yang tersedia secara operasional tanpa target masa depan atau ONI/ENSO bulan berjalan. | Ambang tropis 33/36/39°C; fitur lag ONI dipertahankan; 32 fitur sesudah one-hot. |
 | Splitting | Memisahkan train, validation, dan test secara kronologis. | Menghormati sifat non-i.i.d. dan menjaga test untuk evaluasi akhir. | 10.206 train (68,26%), 2.555 validation (17,09%), 2.191 test (14,65%). |
-| Transformation | One-hot kota, standardisasi numerik, dan window sequence tujuh hari. | Menghasilkan input tabular dan sekuensial dengan skala konsisten serta tanpa leakage antarkota/split. | Scaler fit hanya pada train; LSTM: (10.164, 7, 33), (2.513, 7, 33), (2.149, 7, 33). |
+| Transformation | One-hot kota, standardisasi numerik, dan window sequence tujuh hari. | Menghasilkan input tabular dan sekuensial dengan skala konsisten serta tanpa leakage antarkota/split. | Scaler fit hanya pada train; LSTM: (10.164, 7, 32), (2.513, 7, 32), (2.149, 7, 32). |
 | Balancing & artefak | Menghitung bobot kelas train dan menyimpan dataset siap latih. | Mengatasi imbalance tanpa mengacak urutan waktu serta mendukung pemakaian ulang hasil preprocessing. | CSV `X/y` tiap split, `lstm_sequences.npz`, `scaler.joblib`, `class_weights.json` di `data/processed/`. |
 
 ---
