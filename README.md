@@ -351,69 +351,52 @@ Pipeline data preparation dijalankan di [`notebooks/02_data_preparation.ipynb`](
 
 > Setiap model (6.1, 6.2, 6.3) dijelaskan dalam dua fase: **Model Design [M]** (sub-bagian .1–.3) dan **Optimization [O]** (sub-bagian .4–.6).
 
-### 6.1 Model 1 — Baseline: Decision Tree Classifier
+### 6.1 Model 1 — Baseline Model
 
 #### 6.1.1 Deskripsi Model  **[M]**
 
-**Nama Model:** Decision Tree Classifier (CART — Classification and Regression Trees)
-
+**Nama Model:** Decision Tree Classifier (DecisionTreeClassifier)  
 **Teori Singkat:**  
-Decision Tree adalah model pohon hierarki yang membagi ruang fitur secara rekursif menggunakan aturan *if-else* berbasis threshold (nilai ambang batas) pada satu fitur di setiap node. Algoritma CART memilih split yang meminimalkan kriteria impurity (Gini impurity atau Entropy) di setiap langkah secara *greedy* (lokal-optimal). Prediksi kelas dilakukan berdasarkan kelas mayoritas pada daun (leaf node) yang dicapai oleh data.
-
+Decision Tree adalah algoritma supervised learning berbasis pohon keputusan yang bekerja dengan membagi ruang fitur secara rekursif menjadi sub-himpunan yang lebih murni berdasarkan aturan pemisahan (axis-aligned splits). Di setiap percabangan (node), model mengukur tingkat ketidakmurnian (impurity) untuk menentukan fitur dan nilai ambang (threshold) terbaik yang dapat memisahkan kelas target.  
 **Alasan Pemilihan:**  
-Decision Tree dipilih sebagai model baseline karena:
-1. **Data tabular iklim multivariat** — dataset terdiri dari 32 fitur cuaca numerik dan kategorikal (kota) yang diproses secara tabular, bukan sekuensial. Decision Tree sangat efisien untuk data tabular.
-2. **Hubungan non-linear berbasis ambang batas** — risiko stres panas secara fisiologis terikat pada nilai *threshold* (mis. suhu >38°C → High, >40°C → Extreme). Decision Tree secara alami menangkap struktur ini.
-3. **Interpretabilitas** — sebagai baseline, Decision Tree mudah diinterpretasikan untuk memvalidasi apakah model menangkap pengetahuan domain.
-4. **Pembanding awal sebelum boosting** — perlu model sederhana untuk mengukur besarnya peningkatan yang diberikan oleh XGBoost (Model 2).
+Dipilih sebagai model baseline berbentuk white-box yang sederhana, transparan, dan tidak memerlukan asumsi linieritas antarfitur. Model ini menjadi standar acuan batas performa minimal (benchmark) untuk menguji efektivitas rekayasa fitur sebelum menggunakan model ensemble yang lebih kompleks.
 
 #### 6.1.2 Hypothesis Space & Inductive Bias  **[M]**
 
-- **Model family / arsitektur:** Pohon keputusan tunggal (*single decision tree*), model non-parametrik berbasis partisi hierarki ruang fitur.
-- **Hypothesis space:** Himpunan semua fungsi *piecewise-constant axis-aligned* pada ruang fitur ℝ³². Setiap fungsi didefinisikan oleh sekumpulan aturan threshold berbentuk `fᵢ ≤ θ` yang membentuk hiperplane sejajar sumbu koordinat. Kapasitas hipothesis space bertumbuh eksponensial dengan kedalaman pohon.
-- **Inductive bias / asumsi:**
-  - *Greedy split*: pemilihan split dilakukan secara lokal-optimal di setiap node (bukan global-optimal), sehingga pohon tidak dijamin menemukan partisi terbaik secara global.
-  - *Axis-aligned boundaries*: batas keputusan harus sejajar sumbu fitur; tidak dapat menangkap hubungan diagonal atau interaksi fitur yang halus tanpa membutuhkan banyak node.
-  - *Piecewise-constant*: prediksi dalam satu leaf bersifat konstan (kelas mayoritas), sehingga tidak dapat memperkirakan gradasi probabilitas dalam leaf yang heterogen.
-  - *Hierarki ambang batas*: asumsi bahwa data dapat dipartisi bersih oleh aturan threshold sekuensial — cocok untuk hubungan cuaca-risiko yang bersifat threshold (mis. WBGT > 32°C → Extreme).
-- **Implikasi terhadap dataset cuaca multivariat non-i.i.d.:**
-  - **Pro:** Hubungan non-linear berbasis ambang batas suhu/hujan/angin memang sesuai dengan inductive bias Decision Tree.
-  - **Kontra:** Tanpa batasan `max_depth`, Decision Tree dengan 1 pohon cenderung *overfitting parah* pada time-series meteorologi karena setiap kombinasi nilai lag-fitur membentuk leaf tersendiri. Hal ini terbukti pada hasil (Train Macro F1 = 1.0000 vs Val Macro F1 = 0.3679).
-  - Data time-series bersifat non-i.i.d. (ada autokorelasi temporal) yang tidak secara eksplisit dimodelkan oleh Decision Tree — model tidak tahu bahwa sampel hari-t berkorelasi dengan hari t-1.
+- **Model family / arsitektur:** Non-linear Tree-based Model (Single Decision Tree)
+- **Hypothesis space:** Himpunan seluruh kemungkinan fungsi keputusan berbentuk pohon yang membagi ruang fitur 32-dimensi secara ortogonal (axis-aligned hyperplanes) berbasis nilai ambang variabel kontinu.
+- **Inductive bias / asumsi:** Mengasumsikan bahwa pemisahan batas keputusan terbaik dapat dicapai secara greedy menggunakan penentu kriteria Gini Impurity pada satu variabel tunggal per pemisahan node, serta mengutamakan struktur pohon yang lebih sederhana (Occam's Razor).
+- **Implikasi terhadap dataset Anda:** Sangat fleksibel dalam menangkap hubungan non-linier fitur cuaca harian dan lag suhu. Namun, tanpa pembatasan kedalaman (max_depth=None), model cenderung menghafal pola data latih secara mendalam sehingga sangat rentan mengalami overfitting.
 
 #### 6.1.3 Implementasi (Ringkas)  **[M]**
-
-Implementasi lengkap tersedia di `notebooks/03_model_design_baseline_ml.ipynb`.
-
 ```python
-from sklearn.tree import DecisionTreeClassifier
-
-# Class weights dari class_weights.json (map ke integer)
-# {0: 4.3615, 1: 0.7907, 2: 0.4880, 3: 2.1901}
-
+# Instansiasi & Pelatihan Model Baseline Decision Tree
 baseline_model = DecisionTreeClassifier(
-    criterion="gini",
-    max_depth=None,   # Tanpa batas → pohon tumbuh penuh
-    random_state=42,
-    class_weight=class_weights  # Menangani imbalanced data
+    criterion="gini", max_depth=None, random_state=42, class_weight=class_weights
 )
-baseline_model.fit(X_train, y_train)
-y_pred_val = baseline_model.predict(X_val)
+
+try:
+  baseline_model.fit(X_train, y_train)
+  print("Status: Model Baseline Decision Tree Berhasil Dilatih!")
+
+except Exception as e:
+  print(f"Status: Pelatihan Model GAGAL!")
+  print(f"Penyebab Error: {e}")
 ```
 
 #### 6.1.4 Optimization: Objective, Hyperparameter & Regularisasi  **[O]**
 
-**Objective/loss yang dioptimalkan:** Gini Impurity minimization di setiap node split.  
-Gini impurity: $G(t) = 1 - \sum_{k=0}^{K-1} p(k|t)^2$
+**Objective/loss yang dioptimalkan:** Minimasi Gini Impurity ($G$) pada setiap pemisahan node:$$G = 1 - \sum_{i=0}^{3} p_i^2$$di mana $p_i$ adalah proporsi sampel kelas $i \in \{0, 1, 2, 3\}$ pada node tersebut.
 
 **Parameter yang digunakan (sesuai `03_model_design_baseline_ml.ipynb`):**
 ```
-- criterion   : "gini"      # Gini impurity sebagai split criterion
-- max_depth   : None        # Pohon tumbuh penuh tanpa batas kedalaman
-- random_state: 42          # Reproducibility
-- class_weight: {0: 4.3615, 1: 0.7907, 2: 0.4880, 3: 2.1901}
-                            # Bobot inversely proportional terhadap frekuensi kelas
-                            # untuk menangani imbalanced data (rasio ~9.8:1)
+criterion: 'gini' (fungsi pengukur kualitas pemisahan node).
+
+max_depth: None (pohon dibiarkan tumbuh maksimum tanpa batasan kedalaman / tanpa regularisasi awal).
+
+class_weight: class_weights (penyeimbangan bobot loss berdasarkan invers frekuensi kelas untuk mengatasi imbalanced data).
+
+random_state: 42 (menjaga konsistensi dan reproducibility eksperimen).
 ```
 
 **Catatan:** Pada Minggu 4, parameter regularisasi seperti `max_depth`, `min_samples_leaf`,  
@@ -429,7 +412,7 @@ Hasil evaluasi pada **Validation Set 2025** (`X_val.csv`, `y_val.csv`) dari `03_
 | **Validation Macro F1** | **0.3679** |
 | Validation Weighted F1 | 0.5021 |
 | Training Macro F1 | 1.0000 (100.00%) |
-| Train-Val Gap | 0.6321 (**Overfitting Parah**) |
+| Train-Val Gap | 0.6321 |
 | Waktu Training | 0.1780 detik |
 
 **Classification Report (Validation Set 2025):**
@@ -446,11 +429,9 @@ Class 1 (Moderate)       0.42      0.42      0.42       750
       weighted avg       0.50      0.50      0.50      2555
 ```
 
-**Analisis:** Model mengalami **overfitting parah** (gap 0.63). Train Macro F1 = 1.0 menunjukkan  
-pohon menghafal seluruh data training, namun hanya generalisasi 36.79% pada validation set.  
-Recall kelas Extreme (0.29) sangat rendah — 71% kondisi ekstrem tidak terdeteksi, berbahaya  
-untuk keselamatan pekerja lapangan.
+**Analisis:** Model baseline Decision Tree (max_depth=None) mengalami overfitting parah dengan Train-Val Gap sebesar 0.6321. Nilai Training Macro F1 = 1.0000 menunjukkan bahwa pohon keputusan menghafal seluruh pola data latih secara sempurna, namun hanya mampu bergeneralisasi sebesar 36.79% pada validation set tahun 2025.
 
+Selain itu, performa pada kelas bahaya tinggi tergolong buruk: Recall pada Class 3 (Extreme) hanya sebesar 0.29. Hal ini menandakan bahwa 71% kondisi cuaca ekstrem gagal terdeteksi oleh model baseline, yang sangat berisiko apabila diaplikasikan pada keselamatan kerja di lapangan. Angka Validation Macro F1 = 0.3679 ini menjadi acuan benchmark dasar yang harus dilampaui oleh pemodelan tingkat lanjut (advanced model).
 ---
 
 ### 6.2 Model 2 — Advanced ML: XGBoost Classifier
