@@ -615,7 +615,7 @@ Class 1 (Moderate)       0.48      0.49      0.48       750
 4. `temp_max` (0.0438) — suhu udara maksimum
 5. `kota_Makasar` (0.0424) — lokasi geografis
 
-Fitur El Niño: `oni_anom_lag2m` (0.0316, rank 7) dan `oni_anom_lag3m` (0.0290, rank 10) masuk Top 15, membuktikan relevansi kondisi ENSO dalam prediksi risiko stres panas.
+Fitur El Niño: `oni_anom_lag2m` (0.0316, rank 7) dan `oni_anom_lag3m` (0.0290, rank 10) masuk Top 15, membuktikan relevansi kondisi ENSO dalam prediksi risiko stres panas..
 
 ---
 
